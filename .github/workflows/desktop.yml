@@ -99,6 +99,9 @@ jobs:
           echo "Resolved tag: $tag"
           if [ "${FORCE:-false}" = 'true' ]; then
             exists=false
+          elif [ "${GITHUB_EVENT_NAME:-}" = 'push' ]; then
+            # A push to main indicates updated patches or workflows, rebuild to refresh release assets
+            exists=false
           elif gh release view "$tag" --repo "$GITHUB_REPOSITORY" >/dev/null 2>&1; then
             exists=true
           else
@@ -351,20 +354,25 @@ jobs:
         run: |
           set -euo pipefail
           version=${TAG#dsh-v}
-          gh release create "$TAG" \
-            --repo "$GITHUB_REPOSITORY" \
-            --title "DeepSeek Harness ${version} — Linux & macOS Intel desktop" \
-            --notes "Desktop packages for the official release ${TAG}.
+          if gh release view "$TAG" --repo "$GITHUB_REPOSITORY" >/dev/null 2>&1; then
+            echo "Release $TAG exists, uploading / overwriting assets..."
+            gh release upload "$TAG" --repo "$GITHUB_REPOSITORY" --clobber ./*
+          else
+            gh release create "$TAG" \
+              --repo "$GITHUB_REPOSITORY" \
+              --title "DeepSeek Harness ${version} — Linux & macOS Intel desktop" \
+              --notes "Desktop packages for the official release ${TAG}.
 
-          Built from ${UPSTREAM_REPOSITORY} with the patches in this repository.
+Built from ${UPSTREAM_REPOSITORY} with the patches in this repository.
 
-          ### Linux (x86_64)
-          - deepseek-harness_${version}_amd64.deb — installs to /opt/DeepSeek Harness and registers desktop entry.
-          - deepseek-harness-${version}-x86_64.AppImage — single file, run with chmod +x first.
+### Linux (x86_64)
+- deepseek-harness_${version}_amd64.deb — installs to /opt/DeepSeek Harness and registers desktop entry.
+- deepseek-harness-${version}-x86_64.AppImage — single file, run with chmod +x first.
 
-          ### macOS Intel (x64)
-          - deepseek-harness-${version}-mac-x64.dmg — macOS installer disk image.
-          - deepseek-harness-${version}-mac-x64.zip — portable application archive.
+### macOS Intel (x64)
+- deepseek-harness-${version}-mac-x64.dmg — macOS installer disk image.
+- deepseek-harness-${version}-mac-x64.zip — portable application archive.
 
-          The packaged versions strictly match the official version ${version}." \
-            ./*
+The packaged versions strictly match the official version ${version}." \
+              ./*
+          fi
