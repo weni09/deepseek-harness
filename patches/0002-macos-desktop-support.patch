@@ -3,7 +3,7 @@ new file mode 100644
 index 0000000000..1111111111
 --- /dev/null
 +++ b/scripts/package-mac-desktop.ts
-@@ -0,0 +1,349 @@
+@@ -0,0 +1,355 @@
 +/**
 + * Standalone macOS x64 Desktop packager for DeepSeek Harness (DMG and ZIP).
 + * Supports unnotarized / local ad-hoc signed builds.
@@ -153,12 +153,18 @@ index 0000000000..1111111111
 +)
 +
 +const rootManifest = JSON.parse(readFileSync(join(ROOT, 'package.json'), 'utf8')) as { version: string }
-+const release = parseDesktopRelease(rootManifest.version)
++const release = parseDesktopRelease({
++  schemaVersion: 1,
++  version: rootManifest.version,
++  hostProtocolVersion: 4,
++  nodeVersion: electronNodeVersion,
++  pnpmVersion,
++})
 +const target = { platform: 'darwin' as const, arch: TARGET_ARCH }
 +
 +writeFileSync(
 +  join(RUNTIME_ROOT, 'versions.json'),
-+  JSON.stringify({ schemaVersion: 1, node: process.versions.node, pnpm: pnpmVersion }, null, 2) + '\n',
++  JSON.stringify({ schemaVersion: 1, node: electronNodeVersion, pnpm: pnpmVersion }, null, 2) + '\n',
 +)
 +
 +// Prepare CLI
