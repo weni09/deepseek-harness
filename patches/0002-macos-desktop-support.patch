@@ -1,0 +1,355 @@
+diff --git a/scripts/package-mac-desktop.ts b/scripts/package-mac-desktop.ts
+new file mode 100644
+index 0000000000..1111111111
+--- /dev/null
++++ b/scripts/package-mac-desktop.ts
+@@ -0,0 +1,335 @@
++/**
++ * Standalone macOS x64 Desktop packager for DeepSeek Harness (DMG and ZIP).
++ * Supports unnotarized / local ad-hoc signed builds.
++ */
++
++import { spawnSync, execFileSync } from 'node:child_process'
++import {
++  cpSync,
++  existsSync,
++  mkdirSync,
++  readFileSync,
++  rmSync,
++  writeFileSync,
++  statSync,
++  readdirSync,
++} from 'node:fs'
++import { dirname, join, relative, resolve, sep } from 'node:path'
++import { createRequire } from 'node:module'
++import { parseArgs } from 'node:util'
++
++const ROOT = resolve(import.meta.dirname, '..')
++const desktopRequire = createRequire(join(ROOT, 'apps', 'desktop', 'package.json'))
++const { downloadArtifact } = desktopRequire('@electron/get')
++const extractZip = desktopRequire('extract-zip')
++
++import { preparePrimaryRuntime } from './primary-runtime/prepare.ts'
++import { selectDesktopPackageClosure, type PackedDesktopPackage } from '../apps/desktop/scripts/prepare-package-set.ts'
++import { parseDesktopRelease } from '../apps/desktop/src/release.ts'
++import { type DesktopCorePackageRecord } from '../apps/desktop/src/core-package-set.ts'
++import { writeDesktopRuntime, verifyDesktopRuntime } from '../apps/desktop/src/runtime-tree.ts'
++import { selectOfficeEngine, officePackageDirectories } from './libreoffice-packages.mjs'
++import { desktopRuntimeFileExclusion } from '../apps/desktop/scripts/runtime-file-policy.ts'
++import { prepareRuntimeManifests } from '../apps/desktop/scripts/prepare-runtime-manifests.ts'
++import { prepareCommandLink } from '../apps/desktop/scripts/prepare-command-link.ts'
++import { prepareDesktopCli } from '../apps/desktop/scripts/prepare-cli.ts'
++
++const { values } = parseArgs({
++  options: {
++    arch: { type: 'string', default: 'x64' },
++  },
++})
++
++const TARGET_ARCH = (values.arch === 'arm64' ? 'arm64' : 'x64') as 'arm64' | 'x64'
++const TARGET_NAME = `mac-${TARGET_ARCH}`
++const DESKTOP_ROOT = join(ROOT, 'apps', 'desktop')
++const BUILD_ROOT = join(DESKTOP_ROOT, '.desktop-build', 'targets', TARGET_NAME)
++const ARTIFACTS_DIR = join(ROOT, 'dist', 'desktop')
++const DOWNLOADS_DIR = join(DESKTOP_ROOT, '.desktop-build', 'downloads')
++
++const RUNTIME_ROOT = join(BUILD_ROOT, 'runtime')
++const ELECTRON_DIR = join(BUILD_ROOT, 'electron')
++const DSH_OUTPUT_ROOT = join(BUILD_ROOT, 'dsh')
++const PACKAGE_SET_ROOT = join(BUILD_ROOT, 'package-set')
++const PACKED_ROOT = join(BUILD_ROOT, 'packed')
++const PACKED_DSH = join(PACKED_ROOT, 'dsh')
++const PACKED_VENDOR = join(PACKED_ROOT, 'vendor')
++const PACKED_LANDLOCK = join(PACKED_ROOT, 'landlock')
++
++console.log(`==> 1. Setting up directory layout for ${TARGET_NAME}...`)
++mkdirSync(BUILD_ROOT, { recursive: true })
++mkdirSync(ARTIFACTS_DIR, { recursive: true })
++mkdirSync(DOWNLOADS_DIR, { recursive: true })
++mkdirSync(PACKED_DSH, { recursive: true })
++mkdirSync(PACKED_VENDOR, { recursive: true })
++mkdirSync(PACKED_LANDLOCK, { recursive: true })
++
++console.log('==> 2. Copying packed tarballs from dist/ ...')
++for (const [directory, label] of [
++  [join(ROOT, 'dist', 'npm'), 'dsh'],
++  [join(ROOT, 'dist', 'npm-vendor'), 'vendor'],
++  [join(ROOT, 'dist', 'npm-landlock'), 'landlock'],
++] as const) {
++  if (!existsSync(directory)) {
++    throw new Error(`macOS desktop packaging needs ${directory}. Build it first:\n`
++      + '  pnpm run build:official\n'
++      + '  pnpm run release:pack --family dsh --out dist/npm\n'
++      + '  pnpm run release:pack --family vendor --out dist/npm-vendor\n'
++      + '  pnpm --dir native/system run build:ts\n'
++      + '  pnpm --dir native/system/packages/entry pack --pack-destination "$PWD/dist/npm-landlock"')
++  }
++  console.log(`    ${label}: ${directory}`)
++}
++cpSync(join(ROOT, 'dist', 'npm'), PACKED_DSH, { recursive: true })
++const packDesktopHost = spawnSync('pnpm', ['--dir', 'apps/desktop-host', 'pack', '--pack-destination', PACKED_DSH], {
++  cwd: ROOT,
++  stdio: 'inherit',
++})
++if (packDesktopHost.status !== 0) throw new Error('Failed to pack apps/desktop-host')
++
++cpSync(join(ROOT, 'dist', 'npm-vendor'), PACKED_VENDOR, { recursive: true })
++cpSync(join(ROOT, 'dist', 'npm-landlock'), PACKED_LANDLOCK, { recursive: true })
++
++console.log('==> 3. Preparing Electron and runtime...')
++const require = createRequire(import.meta.url)
++const { version: electronVersion } = require('electron/package.json') as { version: string }
++
++// Download electron for darwin-<arch> if not already present
++if (!existsSync(join(ELECTRON_DIR, 'Electron.app'))) {
++  console.log(`    Downloading Electron v${electronVersion} for darwin-${TARGET_ARCH}...`)
++  const electronZip = await downloadArtifact({
++    version: electronVersion,
++    platform: 'darwin',
++    arch: TARGET_ARCH,
++    artifactName: 'electron',
++    cacheRoot: DOWNLOADS_DIR,
++  })
++  rmSync(ELECTRON_DIR, { recursive: true, force: true })
++  mkdirSync(ELECTRON_DIR, { recursive: true })
++  console.log('    Extracting Electron...')
++  await extractZip(electronZip, { dir: ELECTRON_DIR })
++}
++
++let macosMinVer = '13.0'
++try {
++  macosMinVer = execFileSync('/usr/libexec/PlistBuddy', [
++    '-c',
++    'Print LSMinimumSystemVersion',
++    join(ELECTRON_DIR, 'Electron.app', 'Contents', 'Info.plist'),
++  ], { encoding: 'utf8' }).trim()
++} catch {
++  // fallback to 13.0
++}
++
++// Prepare pinned pnpm
++function preparePnpm(destination: string): string {
++  const pnpmManifestPath = require.resolve('pnpm')
++  const pnpmManifest = JSON.parse(readFileSync(pnpmManifestPath, 'utf8')) as { version?: unknown }
++  if (typeof pnpmManifest.version !== 'string') throw new Error('desktop runtime: pnpm manifest has no version')
++  const pnpmPackageDir = dirname(pnpmManifestPath)
++  rmSync(destination, { recursive: true, force: true })
++  cpSync(pnpmPackageDir, destination, { recursive: true })
++  return pnpmManifest.version
++}
++
++const pnpmDest = join(RUNTIME_ROOT, 'pnpm')
++const pnpmVersion = preparePnpm(pnpmDest)
++
++// Node launcher
++mkdirSync(join(RUNTIME_ROOT, 'bin'), { recursive: true })
++const launcherPath = join(RUNTIME_ROOT, 'bin', 'node')
++writeFileSync(
++  launcherPath,
++  '#!/bin/sh\n'
++  + 'ELECTRON_DIR="$(dirname "$(dirname "$0")")/../electron"\n'
++  + 'exec "$ELECTRON_DIR/Electron.app/Contents/MacOS/Electron" "$@"\n',
++  { mode: 0o755 },
++)
++
++const rootManifest = JSON.parse(readFileSync(join(ROOT, 'package.json'), 'utf8')) as { version: string }
++const release = parseDesktopRelease(rootManifest.version)
++const target = { platform: 'darwin' as const, arch: TARGET_ARCH }
++
++writeFileSync(
++  join(RUNTIME_ROOT, 'versions.json'),
++  JSON.stringify({ schemaVersion: 1, node: process.versions.node, pnpm: pnpmVersion }, null, 2) + '\n',
++)
++
++// Prepare CLI
++await prepareDesktopCli(join(RUNTIME_ROOT, 'cli'), 'darwin')
++if (process.platform === 'darwin') {
++  prepareCommandLink(join(RUNTIME_ROOT, 'cli'), TARGET_ARCH, macosMinVer)
++}
++cpSync(join(DESKTOP_ROOT, 'lib', 'command-manager-entry.js'), join(RUNTIME_ROOT, 'cli', 'command-manager.js'))
++cpSync(join(DESKTOP_ROOT, 'scripts', 'command-path.ps1'), join(RUNTIME_ROOT, 'cli', 'command-path.ps1'))
++
++console.log('==> 4. Preparing primary-runtime...')
++await preparePrimaryRuntime({
++  target: TARGET_NAME as 'mac-x64' | 'mac-arm64',
++  output: RUNTIME_ROOT,
++  cache: DOWNLOADS_DIR,
++  version: release.version,
++})
++
++console.log('==> 5. Preparing office skills assets...')
++const officeSkillsSrc = join(ROOT, 'packages', 'skill', 'office', 'assets')
++const officeSkillsDest = join(RUNTIME_ROOT, 'office-skills')
++if (existsSync(officeSkillsSrc)) {
++  cpSync(officeSkillsSrc, officeSkillsDest, { recursive: true })
++}
++
++console.log('==> 6. Materializing Desktop Host node_modules...')
++rmSync(PACKAGE_SET_ROOT, { recursive: true, force: true })
++mkdirSync(PACKAGE_SET_ROOT, { recursive: true })
++
++const packedPackages: PackedDesktopPackage[] = []
++for (const dir of [PACKED_DSH, PACKED_VENDOR, PACKED_LANDLOCK]) {
++  for (const file of readdirSync(dir)) {
++    if (file.endsWith('.tgz')) {
++      packedPackages.push({ path: join(dir, file) })
++    }
++  }
++}
++
++const closure = selectDesktopPackageClosure(packedPackages)
++const closurePackageSet: DesktopCorePackageRecord[] = closure.map(pkg => ({
++  name: pkg.name,
++  version: pkg.version,
++  archive: pkg.tarball,
++  integrity: pkg.integrity,
++}))
++
++const packageJson = {
++  name: '@deepseek-ai/dsh-desktop-runtime-project',
++  version: release.version,
++  private: true,
++  dependencies: Object.fromEntries(closurePackageSet.map(p => [p.name, p.version])),
++  pnpm: {
++    patchedDependencies: {},
++  },
++}
++writeFileSync(join(PACKAGE_SET_ROOT, 'package.json'), JSON.stringify(packageJson, null, 2) + '\n')
++
++const pnpmLockfile = readFileSync(join(ROOT, 'pnpm-lock.yaml'), 'utf8')
++writeFileSync(join(PACKAGE_SET_ROOT, 'pnpm-lock.yaml'), pnpmLockfile)
++
++const nodeBin = process.execPath
++const pnpmBin = join(pnpmDest, 'bin', 'pnpm.cjs')
++
++console.log('    Running pnpm install --prod in isolated package set...')
++const installResult = spawnSync(
++  nodeBin,
++  [pnpmBin, 'install', '--prod', '--no-optional', '--ignore-scripts'],
++  {
++    cwd: PACKAGE_SET_ROOT,
++    stdio: 'inherit',
++  },
++)
++if (installResult.status !== 0) throw new Error('Failed to install desktop dependencies')
++
++console.log('    Materializing modules to dsh/node_modules with file policy...')
++const srcModules = join(PACKAGE_SET_ROOT, 'node_modules')
++const officeManifest = JSON.parse(readFileSync(join(srcModules, '@deepseek-ai/libreoffice-kit/package.json'), 'utf8'))
++const officeEngine = selectOfficeEngine(officeManifest, target)
++
++mkdirSync(DSH_OUTPUT_ROOT, { recursive: true })
++const dstModules = join(DSH_OUTPUT_ROOT, 'node_modules')
++rmSync(dstModules, { recursive: true, force: true })
++
++cpSync(srcModules, dstModules, {
++  recursive: true,
++  dereference: true,
++  filter: source => desktopRuntimeFileExclusion(relative(srcModules, source), target, officeEngine) === undefined,
++})
++
++writeFileSync(
++  join(DSH_OUTPUT_ROOT, 'package.json'),
++  JSON.stringify({
++    name: '@deepseek-ai/dsh-desktop-runtime',
++    private: true,
++    version: release.version,
++    type: 'module',
++    dependencies: Object.fromEntries(closurePackageSet.map(entry => [entry.name, entry.version])),
++  }, null, 2) + '\n',
++)
++
++await prepareRuntimeManifests(DSH_OUTPUT_ROOT)
++writeDesktopRuntime(DSH_OUTPUT_ROOT, release, closurePackageSet.map(e => e.name), target)
++await verifyDesktopRuntime(DSH_OUTPUT_ROOT, release.version, target)
++
++console.log('==> 7. Packaging macOS App, DMG and ZIP via electron-builder...')
++const officeDirs = await officePackageDirectories(DSH_OUTPUT_ROOT, target)
++const officeUnpackPatterns = officeDirs.map(d => `**/${relative(DSH_OUTPUT_ROOT, d).split(sep).join('/')}/**/*`)
++
++const builderConfig = {
++  appId: 'com.deepseek.harness',
++  productName: 'DeepSeek Harness',
++  artifactName: 'deepseek-harness-${version}-mac-${arch}.${ext}',
++  directories: {
++    output: ARTIFACTS_DIR,
++  },
++  asar: true,
++  electronDist: ELECTRON_DIR,
++  electronFuses: { runAsNode: true },
++  files: [
++    'lib/main.js',
++    'lib/welcome/**/*',
++    'lib/preload-app.cjs',
++    'lib/preload-mandatory.cjs',
++    'lib/preload-platform-account.cjs',
++    'lib/preload-update-dialog.cjs',
++    'lib/preload-welcome.cjs',
++    'renderer/**/*',
++    'package.json',
++    { from: DSH_OUTPUT_ROOT, to: 'dsh', filter: ['**/*'] },
++    { from: join(DSH_OUTPUT_ROOT, 'node_modules'), to: 'dsh/node_modules', filter: ['**/*'] },
++  ],
++  asarUnpack: [
++    '**/*.{node,dylib,dll,so,exe}',
++    '**/*.so.*',
++    '**/spawn-helper',
++    '**/@vscode/ripgrep-*/bin/rg',
++    `**/node_modules/@deepseek-ai/libreoffice-kit-darwin-${TARGET_ARCH}/**/*`,
++    ...officeUnpackPatterns,
++  ],
++  extraResources: [
++    { from: RUNTIME_ROOT, to: 'runtime' },
++    { from: join(DESKTOP_ROOT, 'resources', 'icon-windows.png'), to: 'icon.png' },
++  ],
++  mac: {
++    icon: join(DESKTOP_ROOT, 'resources', 'icon-macos.png'),
++    category: 'public.app-category.developer-tools',
++    extendInfo: {
++      CFBundleLocalizations: ['en', 'zh_CN'],
++      NSMicrophoneUsageDescription: 'DeepSeek Harness uses your microphone to transcribe speech into message drafts.',
++    },
++    identity: null,
++    target: ['dmg', 'zip'],
++  },
++  dmg: {
++    sign: false,
++    writeUpdateInfo: false,
++  },
++}
++
++const configPath = join(BUILD_ROOT, 'electron-builder.json')
++writeFileSync(configPath, JSON.stringify(builderConfig, null, 2) + '\n')
++
++console.log('    Running electron-builder for mac...')
++const builderArgs = [
++  'exec',
++  'electron-builder',
++  '--config',
++  configPath,
++  '--mac',
++  TARGET_ARCH === 'arm64' ? '--arm64' : '--x64',
++  '--publish',
++  'never',
++]
++
++const builderResult = spawnSync('pnpm', builderArgs, {
++  cwd: DESKTOP_ROOT,
++  env: {
++    ...process.env,
++    CSC_IDENTITY_AUTO_DISCOVERY: 'false',
++  },
++  stdio: 'inherit',
++})
++
++if (builderResult.status !== 0) {
++  throw new Error(`electron-builder exited with code ${String(builderResult.status)}`)
++}
++
++console.log(`==> Packaging complete! Artifacts in ${ARTIFACTS_DIR}:`)
++for (const f of readdirSync(ARTIFACTS_DIR)) {
++  if (f.includes(`mac-${TARGET_ARCH}`)) {
++    const size = (statSync(join(ARTIFACTS_DIR, f)).size / (1024 * 1024)).toFixed(2)
++    console.log(`  - ${f} (${size} MB)`)
++  }
++}

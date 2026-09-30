@@ -1,31 +1,30 @@
-# DeepSeek Harness — Linux desktop packaging
+# DeepSeek Harness — Linux & macOS Intel desktop packaging
 
-Automated `.deb` and `.AppImage` builds of the DeepSeek Harness desktop
-application, produced from the **official** [`deepseek-ai/deepseek-harness`](https://github.com/deepseek-ai/deepseek-harness)
+Automated `.deb`, `.AppImage` (Linux x86_64) and `.dmg`, `.zip` (macOS Intel x64)
+builds of the DeepSeek Harness desktop application, produced from the **official**
+[`deepseek-ai/deepseek-harness`](https://github.com/deepseek-ai/deepseek-harness)
 source at an official release tag.
 
 This repository holds no source copy. A scheduled workflow resolves the newest
-official `dsh-v*` tag, checks that tag out, applies the Linux desktop patches in
-[`patches/`](patches/), builds the packages, and publishes them as a GitHub
-Release named after the official tag.
+official `dsh-v*` tag, checks that tag out, applies the desktop patches in
+[`patches/`](patches/), builds the packages across matrix platforms, and publishes
+them as a GitHub Release named after the official tag.
 
 ## Why patches
 
-Upstream implements the desktop application for macOS and Windows only:
+Upstream implements the desktop application with fixed targets:
 
 - `apps/desktop/scripts/desktop-build-paths.mjs` and `package-target.ts` accept
-  only `mac-arm64`, `mac-x64`, and `win-x64` release targets.
+  only `mac-arm64`, `mac-x64`, and `win-x64` release targets, with missing Linux packaging logic.
+- Upstream macOS packaging enforces Apple Developer signing keychain and Notary Tool submission, failing without paid Apple credentials.
 - `apps/desktop/src/main.ts` creates the tray icon only on Windows.
-- The packaging configuration ships no Linux tray icon and no Linux installer.
 
-The patches add exactly that Linux support and nothing else:
+The patches add the following support:
 
 | Patch | Contents |
 | --- | --- |
-| `0001-linux-desktop-support.patch` | A `scripts/package-linux-desktop.ts` entry point that builds the deb and AppImage, a Linux tray icon plus its renderer, the Linux tray creation in the main process, and the Linux resource mappings. |
-
-The patches are ordinary `git diff --binary` output against
-`dsh-v0.2.0-rc.2`, so they carry the rendered `tray-linux.png` too.
+| `0001-linux-desktop-support.patch` | A `scripts/package-linux-desktop.ts` entry point that builds the deb and AppImage, a Linux tray icon plus its renderer, Linux tray creation in the main process, and Linux resource mappings. |
+| `0002-macos-desktop-support.patch` | A `scripts/package-mac-desktop.ts` standalone entry point that builds macOS Intel (`mac-x64`) DMG and ZIP artifacts without requiring Apple Developer signing/notarization credentials. |
 
 ## Version policy
 
@@ -52,44 +51,26 @@ A manually supplied alpha or canary tag is rejected before any build starts.
 
 ## Running it
 
-The schedule runs daily; a new official tag produces one new release. Manual
-runs take an optional tag and a `force` flag from **Actions → Linux desktop
-package → Run workflow**.
+The schedule runs daily (03:17 Beijing time / 19:17 UTC); a new official tag produces
+one new release. Manual runs take an optional tag and a `force` flag from
+**Actions → Desktop package → Run workflow**.
 
-`force` rebuilds a tag that already has a release, which is useful after a patch
-update:
-
-1. Update or add a patch in `patches/` so it applies to the new source.
-2. Run the workflow with that tag and `force` enabled.
-3. Delete the previous release for that tag, or let the new run fail loudly when
-   the release already exists.
+`force` rebuilds a tag that already has a release, which is useful after a patch update.
 
 ## Artifacts
 
-| File | Notes |
-| --- | --- |
-| `deepseek-harness_<version>_amd64.deb` | Installs to `/opt/DeepSeek Harness`, registers `/usr/bin/deepseek-harness` and a desktop entry. Depends on `libnotify4`, `libxtst6`, `libnss3`. |
-| `deepseek-harness-<version>-x86_64.AppImage` | Single file; `chmod +x` and run. Needs FUSE 2, or `--appimage-extract-and-run` where it is unavailable. |
-| `SHA256SUMS.txt` | Checksums of both packages. |
+| Platform | File | Notes |
+| --- | --- | --- |
+| Linux | `deepseek-harness_<version>_amd64.deb` | Installs to `/opt/DeepSeek Harness`, registers `/usr/bin/deepseek-harness` and desktop entry. |
+| Linux | `deepseek-harness-<version>-x86_64.AppImage` | Single file; `chmod +x` and run. |
+| macOS | `deepseek-harness-<version>-mac-x64.dmg` | macOS Intel disk image installer. |
+| macOS | `deepseek-harness-<version>-mac-x64.zip` | macOS Intel portable zip bundle. |
+| All | `SHA256SUMS.txt` | Checksums of all published packages. |
 
-Both packages bundle the Electron shell, the dsh runtime it hosts, a pinned
-Node.js, pnpm, CPython with the Office libraries, and the LibreOffice engine, so
-no system Node.js or Python is required.
+Packages bundle the Electron shell, the dsh runtime it hosts, a pinned
+Node.js, pnpm, CPython with Office libraries, and the LibreOffice engine.
 
-## Runtime notes
-
-- The desktop application shares `~/.dsh` with the `dsh` CLI and the `web`
-  profile: sessions, workspaces, and plugins are the same data.
-- Closing the main window hides it and leaves the Host running. On Linux the top
-  bar tray icon is the way back, which needs the GNOME AppIndicator extension
-  (`gnome-extensions enable ubuntu-appindicators@ubuntu.com`).
-- The tray icon is rendered from `resources/icon-windows.svg` by
-  `pnpm --filter @deepseek-ai/dsh-desktop run render:tray-icon`; the committed
-  `resources/tray-linux.png` is that output.
-
-## Updating for a new official release
-
-A tag whose source no longer matches a patch fails at the `Apply Linux desktop
-patches` step: `git apply` refuses rather than building a silently modified
-application. Resolve it by rebasing the patch onto that tag in a local checkout
-and committing the refreshed file here.
+### macOS Note
+Because packages are built without an Apple Developer ID signature, macOS Gatekeeper may prevent running it on first launch. If prompted with an unverified developer dialog:
+- Right click `DeepSeek Harness.app` -> choose **Open** -> click **Open**.
+- Or run `xattr -cr "/Applications/DeepSeek Harness.app"` in Terminal.

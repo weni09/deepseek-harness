@@ -1,15 +1,15 @@
-# Build the DeepSeek Harness Linux desktop (.deb and .AppImage) from the official
-# source at an official release tag.
+# Build DeepSeek Harness desktop packages (Linux .deb/.AppImage and macOS Intel DMG/ZIP)
+# from the official source at an official release tag.
 #
 # The scheduled run resolves the newest official `dsh-v*` tag, checks the source
-# tree out at that exact tag, applies the Linux desktop patches kept in
-# `patches/`, builds the packages, and publishes them as a GitHub Release under
-# the same tag name. The packaged version therefore always equals the official
+# tree out at that exact tag, applies the patches kept in `patches/`, builds the
+# packages on Linux and macOS Intel runners, and publishes them as a GitHub Release
+# under the same tag name. The packaged version therefore always equals the official
 # version, because it is read from the tag's own `package.json`.
 #
 # A tag that already has a release is skipped, so the schedule is idempotent and
 # a manual dispatch can rebuild one tag with `force`.
-name: Linux desktop package
+name: Desktop package
 
 on:
   push:
@@ -18,7 +18,7 @@ on:
     branches: [main]
     paths:
       - 'patches/**'
-      - '.github/workflows/linux-desktop.yml'
+      - '.github/workflows/desktop.yml'
   schedule:
     # 03:17 Asia/Shanghai every day; the offset keeps the run out of the top-of-hour rush.
     - cron: '17 19 * * *'
@@ -38,7 +38,7 @@ permissions:
   contents: write
 
 concurrency:
-  group: linux-desktop-package
+  group: desktop-package
   cancel-in-progress: false
 
 env:
@@ -108,8 +108,8 @@ jobs:
           echo "tag=$tag" >> "$GITHUB_OUTPUT"
           echo "exists=$exists" >> "$GITHUB_OUTPUT"
 
-  package:
-    name: Build .deb and .AppImage
+  package-linux:
+    name: Build Linux .deb and .AppImage
     needs: resolve
     if: needs.resolve.outputs.exists == 'false'
     runs-on: ubuntu-24.04
@@ -137,7 +137,7 @@ jobs:
           cd "$SOURCE_DIR"
           echo "commit=$(git rev-parse HEAD)" >> "$GITHUB_ENV"
 
-      - name: Apply Linux desktop patches
+      - name: Apply patches
         run: |
           set -euo pipefail
           cd "$SOURCE_DIR"
@@ -195,10 +195,10 @@ jobs:
         working-directory: ${{ env.SOURCE_DIR }}
         run: |
           set -euo pipefail
-          mkdir -p "$GITHUB_WORKSPACE/artifacts"
-          cp dist/desktop/*.deb dist/desktop/*.AppImage "$GITHUB_WORKSPACE/artifacts/"
-          cd "$GITHUB_WORKSPACE/artifacts"
-          sha256sum ./* > SHA256SUMS.txt
+          mkdir -p "$GITHUB_WORKSPACE/artifacts-linux"
+          cp dist/desktop/*.deb dist/desktop/*.AppImage "$GITHUB_WORKSPACE/artifacts-linux/"
+          cd "$GITHUB_WORKSPACE/artifacts-linux"
+          sha256sum ./* > SHA256SUMS-linux.txt
           ls -lh
 
       - name: Verify the built packages carry the official version
@@ -207,7 +207,6 @@ jobs:
           set -euo pipefail
           deb=$(ls dist/desktop/*.deb)
           deb_version=$(dpkg-deb --field "$deb" Version)
-          # Debian normalizes the prerelease separator - to ~, so compare in that spelling.
           expected=${VERSION//-/\~}
           echo "package.json: ${VERSION}  deb control: ${deb_version}"
           if [ "$deb_version" != "$expected" ]; then
@@ -217,29 +216,155 @@ jobs:
           echo "Included in the deb:"
           dpkg-deb --contents "$deb" | grep -F -e 'tray.png' -e '256x256/apps/deepseek-harness.png'
 
-      - name: Upload build artifacts
+      - name: Upload Linux build artifacts
         uses: actions/upload-artifact@v4
         with:
           name: deepseek-harness-linux-desktop-${{ needs.resolve.outputs.tag }}
-          path: artifacts/*
+          path: artifacts-linux/*
           if-no-files-found: error
           retention-days: 30
 
+  package-mac-intel:
+    name: Build macOS Intel DMG and ZIP
+    needs: resolve
+    if: needs.resolve.outputs.exists == 'false'
+    runs-on: macos-15-intel
+    timeout-minutes: 240
+    env:
+      TAG: ${{ needs.resolve.outputs.tag }}
+      SOURCE_DIR: ${{ github.workspace }}/source
+    steps:
+      - name: Check out the packaging repository
+        uses: actions/checkout@v4
+
+      - name: Check out official source at the tag
+        run: |
+          set -euo pipefail
+          git clone --depth 1 --branch "$TAG" \
+            "https://github.com/${UPSTREAM_REPOSITORY}.git" "$SOURCE_DIR"
+          cd "$SOURCE_DIR"
+          echo "commit=$(git rev-parse HEAD)" >> "$GITHUB_ENV"
+
+      - name: Apply patches
+        run: |
+          set -euo pipefail
+          cd "$SOURCE_DIR"
+          for patch in "$GITHUB_WORKSPACE"/patches/*.patch; do
+            echo "Applying $(basename "$patch")"
+            git apply --verbose "$patch"
+          done
+
+      - name: Verify the packaged version matches the official tag
+        run: |
+          set -euo pipefail
+          cd "$SOURCE_DIR"
+          version=$(node -p "require('./package.json').version")
+          if [ "dsh-v${version}" != "$TAG" ]; then
+            echo "::error::Source version ${version} does not match tag ${TAG}"
+            exit 1
+          fi
+          echo "VERSION=$version" >> "$GITHUB_ENV"
+          echo "Building DeepSeek Harness ${version} from ${TAG}"
+
+      - name: Set up pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 11.7.0
+          run_install: false
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          package-manager-cache: false
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+        working-directory: ${{ env.SOURCE_DIR }}
+
+      - name: Build the repository
+        run: pnpm run build:official
+        working-directory: ${{ env.SOURCE_DIR }}
+
+      - name: Pack the release tarballs the desktop runtime installs
+        working-directory: ${{ env.SOURCE_DIR }}
+        run: |
+          set -euo pipefail
+          pnpm run release:pack --family dsh --out dist/npm --concurrency 8
+          pnpm run release:pack --family vendor --out dist/npm-vendor --concurrency 8
+          pnpm --dir native/system run build:ts
+          pnpm --dir native/system/packages/entry pack --pack-destination "$PWD/dist/npm-landlock"
+
+      - name: Package the macOS Intel desktop
+        working-directory: ${{ env.SOURCE_DIR }}
+        run: pnpm exec tsx scripts/package-mac-desktop.ts --arch x64
+
+      - name: Collect artifacts
+        working-directory: ${{ env.SOURCE_DIR }}
+        run: |
+          set -euo pipefail
+          mkdir -p "$GITHUB_WORKSPACE/artifacts-mac"
+          cp dist/desktop/*.dmg dist/desktop/*.zip "$GITHUB_WORKSPACE/artifacts-mac/"
+          cd "$GITHUB_WORKSPACE/artifacts-mac"
+          shasum -a 256 ./* > SHA256SUMS-mac.txt
+          ls -lh
+
+      - name: Upload macOS build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: deepseek-harness-mac-intel-${{ needs.resolve.outputs.tag }}
+          path: artifacts-mac/*
+          if-no-files-found: error
+          retention-days: 30
+
+  publish:
+    name: Publish Release
+    needs: [resolve, package-linux, package-mac-intel]
+    runs-on: ubuntu-24.04
+    env:
+      TAG: ${{ needs.resolve.outputs.tag }}
+    steps:
+      - name: Download Linux artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: deepseek-harness-linux-desktop-${{ needs.resolve.outputs.tag }}
+          path: all-artifacts
+
+      - name: Download macOS artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: deepseek-harness-mac-intel-${{ needs.resolve.outputs.tag }}
+          path: all-artifacts
+
+      - name: Generate unified SHA256SUMS
+        working-directory: all-artifacts
+        run: |
+          set -euo pipefail
+          rm -f SHA256SUMS*.txt
+          sha256sum ./* > SHA256SUMS.txt
+          cat SHA256SUMS.txt
+
       - name: Publish the release
+        working-directory: all-artifacts
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           set -euo pipefail
-          cd "$GITHUB_WORKSPACE/artifacts"
+          version=${TAG#dsh-v}
           gh release create "$TAG" \
             --repo "$GITHUB_REPOSITORY" \
-            --title "DeepSeek Harness ${VERSION} — Linux desktop" \
-            --notes "Linux desktop packages for the official release ${TAG}.
+            --title "DeepSeek Harness ${version} — Linux & macOS Intel desktop" \
+            --notes "Desktop packages for the official release ${TAG}.
 
-          Built from ${UPSTREAM_REPOSITORY} at commit ${commit} with the patches in patches/.
+          Built from ${UPSTREAM_REPOSITORY} with the patches in this repository.
 
-          - deepseek-harness_${VERSION}_amd64.deb — installs to /opt/DeepSeek Harness and registers a desktop entry.
-          - deepseek-harness-${VERSION}-x86_64.AppImage — single-file, run with chmod +x first.
+          ### Linux (x86_64)
+          - deepseek-harness_${version}_amd64.deb — installs to /opt/DeepSeek Harness and registers desktop entry.
+          - deepseek-harness-${version}-x86_64.AppImage — single file, run with chmod +x first.
 
-          The packaged version matches the official version ${VERSION}." \
-            ./*.deb ./*.AppImage ./SHA256SUMS.txt
+          ### macOS Intel (x64)
+          - deepseek-harness-${version}-mac-x64.dmg — macOS installer disk image.
+          - deepseek-harness-${version}-mac-x64.zip — portable application archive.
+
+          The packaged versions strictly match the official version ${version}." \
+            ./*
