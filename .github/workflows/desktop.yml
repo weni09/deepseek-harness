@@ -354,6 +354,22 @@ jobs:
         run: |
           set -euo pipefail
           version=${TAG#dsh-v}
+          notes=$(cat <<EOF
+          Desktop packages for the official release ${TAG}.
+
+          Built from ${UPSTREAM_REPOSITORY} with the patches in this repository.
+
+          ### Linux (x86_64)
+          - deepseek-harness_${version}_amd64.deb — installs to /opt/DeepSeek Harness and registers desktop entry.
+          - deepseek-harness-${version}-x86_64.AppImage — single file, run with chmod +x first.
+
+          ### macOS Intel (x64)
+          - deepseek-harness-${version}-mac-x64.dmg — macOS installer disk image.
+          - deepseek-harness-${version}-mac-x64.zip — portable application archive.
+
+          The packaged versions strictly match the official version ${version}.
+          EOF
+          )
           if gh release view "$TAG" --repo "$GITHUB_REPOSITORY" >/dev/null 2>&1; then
             echo "Release $TAG exists, uploading / overwriting assets..."
             gh release upload "$TAG" --repo "$GITHUB_REPOSITORY" --clobber ./*
@@ -361,18 +377,6 @@ jobs:
             gh release create "$TAG" \
               --repo "$GITHUB_REPOSITORY" \
               --title "DeepSeek Harness ${version} — Linux & macOS Intel desktop" \
-              --notes "Desktop packages for the official release ${TAG}.
-
-Built from ${UPSTREAM_REPOSITORY} with the patches in this repository.
-
-### Linux (x86_64)
-- deepseek-harness_${version}_amd64.deb — installs to /opt/DeepSeek Harness and registers desktop entry.
-- deepseek-harness-${version}-x86_64.AppImage — single file, run with chmod +x first.
-
-### macOS Intel (x64)
-- deepseek-harness-${version}-mac-x64.dmg — macOS installer disk image.
-- deepseek-harness-${version}-mac-x64.zip — portable application archive.
-
-The packaged versions strictly match the official version ${version}." \
+              --notes "$notes" \
               ./*
           fi
