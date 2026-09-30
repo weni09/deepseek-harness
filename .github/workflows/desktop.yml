@@ -307,7 +307,10 @@ jobs:
         run: |
           set -euo pipefail
           mkdir -p "$GITHUB_WORKSPACE/artifacts-mac"
-          cp dist/desktop/*.dmg dist/desktop/*.zip "$GITHUB_WORKSPACE/artifacts-mac/"
+          cp dist/desktop/*.zip "$GITHUB_WORKSPACE/artifacts-mac/"
+          if ls dist/desktop/*.dmg 1> /dev/null 2>&1; then
+            cp dist/desktop/*.dmg "$GITHUB_WORKSPACE/artifacts-mac/"
+          fi
           cd "$GITHUB_WORKSPACE/artifacts-mac"
           shasum -a 256 ./* > SHA256SUMS-mac.txt
           ls -lh
