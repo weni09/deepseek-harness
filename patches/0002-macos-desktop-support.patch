@@ -3,7 +3,7 @@ new file mode 100644
 index 0000000000..1111111111
 --- /dev/null
 +++ b/scripts/package-mac-desktop.ts
-@@ -0,0 +1,335 @@
+@@ -0,0 +1,349 @@
 +/**
 + * Standalone macOS x64 Desktop packager for DeepSeek Harness (DMG and ZIP).
 + * Supports unnotarized / local ad-hoc signed builds.
