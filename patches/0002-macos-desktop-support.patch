@@ -3,7 +3,7 @@ new file mode 100644
 index 0000000000..1111111111
 --- /dev/null
 +++ b/scripts/package-mac-desktop.ts
-@@ -0,0 +1,361 @@
+@@ -0,0 +1,363 @@
 +/**
 + * Standalone macOS x64 Desktop packager for DeepSeek Harness (DMG and ZIP).
 + * Supports unnotarized / local ad-hoc signed builds.
@@ -200,16 +200,18 @@ index 0000000000..1111111111
 +rmSync(PACKAGE_SET_ROOT, { recursive: true, force: true })
 +mkdirSync(PACKAGE_SET_ROOT, { recursive: true })
 +
-+const packedPackages: PackedDesktopPackage[] = []
++const available = new Map<string, PackedDesktopPackage>()
 +for (const dir of [PACKED_DSH, PACKED_VENDOR, PACKED_LANDLOCK]) {
-+  for (const file of readdirSync(dir)) {
-+    if (file.endsWith('.tgz')) {
-+      packedPackages.push({ path: join(dir, file) })
-+    }
++  for (const file of readdirSync(dir).filter(f => f.endsWith('.tgz'))) {
++    const tarball = join(dir, file)
++    const manifest = JSON.parse(execFileSync('tar', ['-xOzf', tarball, 'package/package.json'], { encoding: 'utf8' }))
++    const name = manifest.name as string
++    if (available.has(name)) continue
++    available.set(name, { tarball, manifest })
 +  }
 +}
 +
-+const closure = selectDesktopPackageClosure(packedPackages)
++const closure = selectDesktopPackageClosure(available)
 +const closurePackageSet: DesktopCorePackageRecord[] = closure.map(pkg => ({
 +  name: pkg.name,
 +  version: pkg.version,
