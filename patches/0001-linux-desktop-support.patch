@@ -250,15 +250,15 @@ index b2ce416bbc..48f34304c9 100644
    /** Show and focus the primary window. */
 diff --git a/scripts/package-linux-desktop.ts b/scripts/package-linux-desktop.ts
 new file mode 100644
-index 0000000000..690ff1d0dc
+index 0000000000..cb030a5de4
 --- /dev/null
 +++ b/scripts/package-linux-desktop.ts
-@@ -0,0 +1,409 @@
+@@ -0,0 +1,407 @@
 +/**
 + * Standalone Linux Desktop packager for DeepSeek Harness (deb and AppImage).
 + */
 +
-+import { spawn, spawnSync, execFileSync } from 'node:child_process'
++import { spawnSync, execFileSync } from 'node:child_process'
 +import {
 +  cpSync,
 +  existsSync,
@@ -285,8 +285,6 @@ index 0000000000..690ff1d0dc
 +import { selectDesktopPackageClosure, type PackedDesktopPackage } from '../apps/desktop/scripts/prepare-package-set.ts'
 +import { parseDesktopRelease } from '../apps/desktop/src/release.ts'
 +import {
-+  DESKTOP_HOST_PACKAGE,
-+  DESKTOP_HOST_RUNTIME_FILES,
 +  DESKTOP_PACKAGES_DIR,
 +  DESKTOP_PACKAGE_SET_FILE,
 +  readDesktopCorePackageSet,
