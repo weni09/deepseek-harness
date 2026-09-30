@@ -3,7 +3,7 @@ new file mode 100644
 index 0000000000..1111111111
 --- /dev/null
 +++ b/scripts/package-mac-desktop.ts
-@@ -0,0 +1,402 @@
+@@ -0,0 +1,403 @@
 +/**
 + * Standalone macOS x64 Desktop packager for DeepSeek Harness (DMG and ZIP).
 + * Supports unnotarized / local ad-hoc signed builds.
@@ -19,8 +19,10 @@ index 0000000000..1111111111
 +  writeFileSync,
 +  statSync,
 +  readdirSync,
++  copyFileSync,
++  mkdtempSync,
 +} from 'node:fs'
-+import { dirname, join, relative, resolve, sep } from 'node:path'
++import { dirname, join, relative, resolve, sep, basename, delimiter } from 'node:path'
 +import { createRequire } from 'node:module'
 +import { parseArgs } from 'node:util'
 +
@@ -42,7 +44,6 @@ index 0000000000..1111111111
 +import { DESKTOP_HOST_PROTOCOL_VERSION } from '../apps/desktop/src/host-protocol.ts'
 +import { createHash } from 'node:crypto'
 +import { tmpdir } from 'node:os'
-+import { basename, copyFileSync, mkdtempSync, delimiter } from 'node:path'
 +import { writeDesktopRuntime, verifyDesktopRuntime } from '../apps/desktop/src/runtime-tree.ts'
 +import { selectOfficeEngine, officePackageDirectories } from './libreoffice-packages.mjs'
 +import { desktopRuntimeFileExclusion } from '../apps/desktop/scripts/runtime-file-policy.ts'
