@@ -140,15 +140,6 @@ jobs:
           cd "$SOURCE_DIR"
           echo "commit=$(git rev-parse HEAD)" >> "$GITHUB_ENV"
 
-      - name: Apply patches
-        run: |
-          set -euo pipefail
-          cd "$SOURCE_DIR"
-          for patch in "$GITHUB_WORKSPACE"/patches/*.patch; do
-            echo "Applying $(basename "$patch")"
-            git apply --verbose "$patch"
-          done
-
       - name: Verify the packaged version matches the official tag
         run: |
           set -euo pipefail
@@ -180,6 +171,15 @@ jobs:
       - name: Build the repository
         run: pnpm run build:official
         working-directory: ${{ env.SOURCE_DIR }}
+
+      - name: Apply patches
+        run: |
+          set -euo pipefail
+          cd "$SOURCE_DIR"
+          for patch in "$GITHUB_WORKSPACE"/patches/*.patch; do
+            echo "Applying $(basename "$patch")"
+            git apply --verbose "$patch"
+          done
 
       - name: Pack the release tarballs the desktop runtime installs
         working-directory: ${{ env.SOURCE_DIR }}
@@ -248,15 +248,6 @@ jobs:
           cd "$SOURCE_DIR"
           echo "commit=$(git rev-parse HEAD)" >> "$GITHUB_ENV"
 
-      - name: Apply patches
-        run: |
-          set -euo pipefail
-          cd "$SOURCE_DIR"
-          for patch in "$GITHUB_WORKSPACE"/patches/*.patch; do
-            echo "Applying $(basename "$patch")"
-            git apply --verbose "$patch"
-          done
-
       - name: Verify the packaged version matches the official tag
         run: |
           set -euo pipefail
@@ -288,6 +279,15 @@ jobs:
       - name: Build the repository
         run: pnpm run build:official
         working-directory: ${{ env.SOURCE_DIR }}
+
+      - name: Apply patches
+        run: |
+          set -euo pipefail
+          cd "$SOURCE_DIR"
+          for patch in "$GITHUB_WORKSPACE"/patches/*.patch; do
+            echo "Applying $(basename "$patch")"
+            git apply --verbose "$patch"
+          done
 
       - name: Pack the release tarballs the desktop runtime installs
         working-directory: ${{ env.SOURCE_DIR }}
