@@ -1,9 +1,9 @@
 diff --git a/scripts/package-mac-desktop.ts b/scripts/package-mac-desktop.ts
 new file mode 100644
-index 0000000000..568ab380e4
+index 0000000000..854e7ec33d
 --- /dev/null
 +++ b/scripts/package-mac-desktop.ts
-@@ -0,0 +1,424 @@
+@@ -0,0 +1,421 @@
 +/**
 + * Standalone macOS x64 Desktop packager for DeepSeek Harness (DMG and ZIP).
 + * Supports unnotarized / local ad-hoc signed builds.
@@ -21,6 +21,7 @@ index 0000000000..568ab380e4
 +  readdirSync,
 +  copyFileSync,
 +  mkdtempSync,
++  chmodSync,
 +} from 'node:fs'
 +import { dirname, join, relative, resolve, sep, basename, delimiter } from 'node:path'
 +import { createRequire } from 'node:module'
@@ -44,6 +45,7 @@ index 0000000000..568ab380e4
 +import { DESKTOP_HOST_PROTOCOL_VERSION } from '../apps/desktop/src/host-protocol.ts'
 +import { createHash } from 'node:crypto'
 +import { tmpdir } from 'node:os'
++import { desktopNodeEnvironment } from '../apps/desktop/src/node-environment.ts'
 +import { writeDesktopRuntime, verifyDesktopRuntime } from '../apps/desktop/src/runtime-tree.ts'
 +import { selectOfficeEngine, officePackageDirectories } from './libreoffice-packages.mjs'
 +import { desktopRuntimeFileExclusion } from '../apps/desktop/scripts/runtime-file-policy.ts'
@@ -166,15 +168,8 @@ index 0000000000..568ab380e4
 +const pnpmVersion = preparePnpm(pnpmDest)
 +
 +// Node launcher
-+mkdirSync(join(RUNTIME_ROOT, 'bin'), { recursive: true })
-+const launcherPath = join(RUNTIME_ROOT, 'bin', 'node')
-+writeFileSync(
-+  launcherPath,
-+  '#!/bin/sh\n'
-+  + 'ELECTRON_DIR="$(dirname "$(dirname "$0")")/../electron"\n'
-+  + 'exec "$ELECTRON_DIR/Electron.app/Contents/MacOS/Electron" "$@"\n',
-+  { mode: 0o755 },
-+)
++cpSync(join(DESKTOP_ROOT, 'scripts', 'node-bin'), join(RUNTIME_ROOT, 'bin'), { recursive: true })
++chmodSync(join(RUNTIME_ROOT, 'bin', 'node'), 0o755)
 +
 +const rootManifest = JSON.parse(readFileSync(join(ROOT, 'package.json'), 'utf8')) as { version: string }
 +const release = parseDesktopRelease({
@@ -267,7 +262,8 @@ index 0000000000..568ab380e4
 +  mkdirSync(pnpmConfig, { recursive: true })
 +  writeFileSync(userConfig, '')
 +
-+  const NODE = process.platform === 'darwin' ? join(RUNTIME_ROOT, 'bin', 'node') : process.execPath
++  const electronExecutable = join(ELECTRON_DIR, 'Electron.app', 'Contents', 'MacOS', 'Electron')
++  const NODE = process.platform === 'darwin' ? electronExecutable : process.execPath
 +  function runDshPnpm(args: string[]): void {
 +    const res = spawnSync(NODE, [
 +      '--expose-internals',
@@ -284,6 +280,7 @@ index 0000000000..568ab380e4
 +        ))),
 +        NPM_CONFIG_STORE_DIR: STORE_ROOT,
 +        NPM_CONFIG_USERCONFIG: userConfig,
++        ...desktopNodeEnvironment(electronExecutable, join(RUNTIME_ROOT, 'bin'), {}),
 +        PATH: process.platform === 'darwin' ? `${join(RUNTIME_ROOT, 'bin')}${delimiter}${process.env.PATH ?? ''}` : (process.env.PATH ?? ''),
 +        XDG_CACHE_HOME: join(PNPM_BUILD_STATE, 'cache'),
 +        XDG_CONFIG_HOME: pnpmConfig,
