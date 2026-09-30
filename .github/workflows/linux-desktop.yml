@@ -12,6 +12,13 @@
 name: Linux desktop package
 
 on:
+  push:
+    # A patch or workflow change re-evaluates the newest eligible tag right away; a tag that
+    # already has a release is skipped, so documentation-only pushes stay on `paths`.
+    branches: [main]
+    paths:
+      - 'patches/**'
+      - '.github/workflows/linux-desktop.yml'
   schedule:
     # 03:17 Asia/Shanghai every day; the offset keeps the run out of the top-of-hour rush.
     - cron: '17 19 * * *'
