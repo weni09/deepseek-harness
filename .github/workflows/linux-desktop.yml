@@ -18,7 +18,7 @@ on:
   workflow_dispatch:
     inputs:
       tag:
-        description: 'Official dsh-v* tag to build; empty builds the newest one'
+        description: 'Official dsh-v* tag to build (stable or release candidate); empty builds the newest eligible one'
         required: false
         type: string
       force:
@@ -53,14 +53,40 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           set -euo pipefail
+
+          # Alpha and canary builds are internal channels, the same two the release scripts give
+          # their own npm dist-tags; this pipeline only ever packages release-candidate and stable tags.
+          excluded_channels='(alpha|canary)'
+
+          # Newest tag by base version, preferring the stable release of that base over its
+          # prereleases: the sort key is <base version, stable rank, full tag>.
+          resolve_newest() {
+            git ls-remote --tags --refs "https://github.com/${UPSTREAM_REPOSITORY}.git" \
+              | awk -F/ '{print $NF}' \
+              | grep -E '^dsh-v[0-9]+\.[0-9]+\.[0-9]+' \
+              | grep -vE "^dsh-v[0-9]+\.[0-9]+\.[0-9]+-${excluded_channels}(\.|$)" \
+              | while read -r candidate; do
+                  body=${candidate#dsh-v}
+                  base=${body%%-*}
+                  if [ "$base" = "$body" ]; then rank=1; else rank=0; fi
+                  printf '%s\t%s\t%s\n' "$base" "$rank" "$candidate"
+                done \
+              | sort -k1,1V -k2,2n -k3,3V \
+              | tail -n 1 | cut -f3 || true
+          }
+
           if [ -n "${INPUT_TAG:-}" ]; then
             tag="$INPUT_TAG"
+            if printf '%s' "$tag" | grep -qE "^dsh-v[0-9]+\.[0-9]+\.[0-9]+-${excluded_channels}(\.|$)"; then
+              echo "::error::${tag} is an alpha or canary build; this pipeline packages release candidates and stable releases only"
+              exit 1
+            fi
           else
-            tag=$(git ls-remote --tags --refs "https://github.com/${UPSTREAM_REPOSITORY}.git" \
-              | awk -F/ '{print $NF}' | grep -E '^dsh-v[0-9]' | sort -V | tail -n 1 || true)
+            tag=$(resolve_newest)
           fi
+
           if [ -z "$tag" ]; then
-            echo "::error::No official dsh-v* tag found in ${UPSTREAM_REPOSITORY}"
+            echo "::error::No stable or release-candidate dsh-v* tag found in ${UPSTREAM_REPOSITORY}"
             exit 1
           fi
           echo "Resolved tag: $tag"

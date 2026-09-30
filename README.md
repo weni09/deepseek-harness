@@ -33,6 +33,23 @@ A build is only produced for a published official tag, and the workflow verifies
 `dsh-v<package.json version>` equals that tag before building. The result is
 therefore the official version, never a locally invented one.
 
+**Channels.** Only stable releases and release candidates are packaged. The
+`alpha` and `canary` channels are excluded, the same two the release scripts
+give their own npm dist-tags; `rc`, `beta`, and any other prerelease channel are
+eligible.
+
+The scheduled run picks the newest eligible tag by base version, and prefers the
+stable release of a base version over its own prereleases:
+
+| Official tags present | Built |
+| --- | --- |
+| `0.2.0-rc.2`, `0.3.0-alpha.1`, `0.3.0-canary.2` | `dsh-v0.2.0-rc.2` — a newer-base alpha never wins |
+| `0.2.0-rc.2`, `0.2.0` | `dsh-v0.2.0` — stable beats its own release candidate |
+| `0.2.0`, `0.3.0-rc.1` | `dsh-v0.3.0-rc.1` — a newer base still wins over an older stable |
+| only `0.3.0-alpha.1` | nothing; the run fails with no eligible tag |
+
+A manually supplied alpha or canary tag is rejected before any build starts.
+
 ## Running it
 
 The schedule runs daily; a new official tag produces one new release. Manual
