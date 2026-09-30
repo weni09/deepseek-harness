@@ -1,0 +1,665 @@
+diff --git a/apps/desktop/resources/tray-linux.png b/apps/desktop/resources/tray-linux.png
+new file mode 100644
+index 0000000000000000000000000000000000000000..6a918c04f40c54ad87a6d2d2d251d9fc37581cdc
+GIT binary patch
+literal 4959
+zcmV-l6QJygP)<h;3K|Lk000e1NJLTq002M$002M;1^@s6s%dfF00009a7bBm00027
+z000270mdy!jQ{`>5lKWrRCt{2n|Y9vb(+Tm9{caizcW=^`|pf&=f3Zx(+AxRNDJyP
+zI9@2CfCI{+g2*7^a4I?@qps(84dab6qwJ2%s<ViKC@6<3H1w6ueY{EDG*#cN=lQ*F
+zl1|dyY0xd%+OB#koph%=&*%4j&NtC${{L&juPGO}o%7cejYcySz>j5F-YUz*Z)CYB
+z$+CR5I5GmZVxv}sT+ih3tuRT;<qKz}TtSj@g%eUfznNY;`7l`!QxwN9DHICN$+BD=
+z85u#f{ZJuPT0Sq!87coP`O+weDfEkyB>kjVEDqFj{6YjF<?`WtKL0O`K$r^Pr?M<(
+z8*#n{!pIL7LM~s(ND_XkKp4~cONzzf;AEV?kkpXN7X~WAp+@=_6^q5^&(--0MGcZv
+zc#3?j4uvU7wy&G;{x7K^moLalbr=O;>d45*w(rXMa|coUUjdPk@|&u|U}~{g{O0=r
+z@IzEXE?+!e4}kQ20r;-eP>^L|1^K){<nwa29)PpoHvkpFc&9m*8p!c{p@3XI&$s6T
+zfjY(-03+w?m~vthnJm)_7tXNd%ceS24S^j}e*eDvH{tU`Uor@Sa;{;aRD$yZQ0WxC
+zczTibt^BiGE{9AegZKA*fGrRG9?Mp&#;r?NVD)_u;?NgI>O!FV1n7gkAHnJG#_F{j
+zkjYA*gg#ja^c=G4QaE+8j;klhCzH>!V}pZ3=<Pj?BVQfGmxsT?w<k{_o6RCCN&NG_
+z|L4cJXU+X^`8!~;1z>T8;P7_96X?Q{U#~=8-vB#W4?r%L$6c$}!|t69Ps>aU42Ajc
+zmLN=!BnfOTUnrSIqq%s}0LrH=PV(!ok74_xf57}}Z-Uj;0=>n<W?=IQvwGogodJip
+z9eRteWJa4GCVLPzcPp-*e<M=q4C2WopVC+W=KSIYSX^zexY{xQ`de|b_l$t6=7llT
+zK+fm$G9)R7BVQfE$&;rsXU-f_z(oxKsCN95{h#5w8*hQ$?1s)HOlx#OYa(-(O#I9P
+zo!O&2<|!FLFj)Ppf*p@Pjd(oHf1ggWx>BeB0&TNla)e;Ax4`6Rh27JM`ybrKYLIfd
+zk{Z-XAsnaIoJTe*;p30@qkYEJSbE33@Or(ZfQu&tpgK=7PbO2i=iYVDv7;_%jZQQh
+z9Ev&7q<5gnK;|qNJ>G0^2{Q^K06H_NgOm`!@)fH&R2YCF=gN|)0`LT9z+?}>Xm5eR
+z*21?0BGfq-UmiKid4WKXBFN~($?<`~FdqN6=izJZfxqnvEL(9Oj7B5P1mgoxou^ap
+z>+i=ES6)+cx=C*r4)d+O;=ZE>L~|vG3J5|4J`RN!UfRk3hd|T+<OHjhO$ET*c{lRu
+z8>~U-EkWq5K?OtzJy%`FPG_=NJpa<4aqWU7tQfPi4Q6KtY@SZI0yE)j>%qg1KG_%m
+zS#f?~U=W?%SD@KIPTDX{S7i-As8$1qh<P-GrOWR|BogKSSqXs@LC!7z*EKLZTVb>j
+zfB<yn07Fo1=c{jF_LbL_)InfKA!b)QY~D_|12b6xyLP`fF@Pd9AB6%->KE7CfM&f7
+zP2{ZBifKBsY7q8Gt3k~bDg+9LnLWS6(PJk@Lr?&``<M4&akW;cKtN!#s75eaO6nj0
+z7Iz1nfo^z0v(VOcCBnneiF1G~i>$eE%R_wf<n(1)ivUo9U_Ea&XpKt3G<!-Ae4!cm
+z^s~<u2;~G!d7`ar4$RIFtAHIg`xPrg5YAJw3~|M<`=-MkoPj`l4>oLi7_oR98c_u<
+zt_wgt{V%>a41<}HTcyKRG_l!~a5!Hzj1CDEf;-TKf9%`O5JY*Ckw_-7=ifho)z!u!
+zqqhb|LEyY#2`b4^ao#%}?m#zut(W8SIlsc7(myDz@WpijsHcC^!rP!V*jfH;^nIo2
+zg%Jp0_H$MPE5WEj@RlI#`{c7yIMAUa5((}gISgz8=&b(I$x~REY(bbEt+098;q-UH
+z6YPe+Z8qAwufo3l2M|jnxM$F4G@~{{Q>#y(`fZ)j2Ccygt$}WB&>8K}naCV$TDos^
+zLd#`PKv5l@tQxqFAOKt)yrUrO|MZ|xg3@&ogr}c<5oQO)x`05p1jXW{{-7N$Ul*6n
+zK>KW5IqyasJaicGc!Hl#ic$bfsR5v7{&n|nfX-lt)@Xy?<bc8Kg30PBn~gd>H}qx~
+z^d={CMu&i56fh>E2DLPjsm)Uvf*<ZcCqDXk-zW&wIPG}i85pc|@&OpF0nQC}ZwFld
+zF8D$-G3V;*@yzoti!PI$FSprsXMv(p_a#X}AlShtPR<#vZde^Y*qlDtU4fEWojzEd
+zewgh(7_A-{%x(e0<eZcmI0Q@;rID@NN*k>{SY09R6(}?b1SQ0cTefpIDcb55*xYUC
+zo;?q*z3~pd`uZ5Rzp+>xiA1Vq$f~ywfI4;_KYoHwoy=%)Vcq%%IU$C_!$>5OIDMuM
+zpM0_(FTD5)?pSdT{Gra#AWSY+M13{bN2x(AixdJn0;tRrqh<<g*%scqjE5}((B3sy
+z08m<Lr*AqI|9T~&u{h5a<hU5KYv+p^05Xq@LjJpU?S|fD=L%r4d-3hJCl!(j&cu~Q
+zQY6K^_ud{XUV0~k;P6n?FlI<7YM`!?x=WIN*UY(Cuy6@{!A`CQVxSTbND&kkB1!tu
+zbLF+%PV-=8^~36Fh08Y`OPAfnDp6+wbxN$>G1LGkC<6pN`LRDd0lm=<qlEx?aPZ(E
+z@kgsBF7ccK&j>1v!$-cx&5M@8;_!<c!TCWAi8|#{0Wjz4U-4;?$|ww9{?n^)`Z|R3
+zqzJQzb3^5@rMA;50Jpyr>o;tv=_Ko|;c5WnmC1=}<i^e0xcnJO0X7fbdw)+&XI8!C
+zQDG2>bUKYU-`s^z`^<`vs1JcvV06Oa3E`pbkKw&N|G}>#5{=@(!9(x{yBGkSyqG%O
+zrI|wQBB@%?SnUaP;^m#MagwChRkMp683#ZvFBS$gQLS6Qp;Y!vHV>Y8_Kysp@{f+U
+z9ioAR!iAhzc<b#P5^AMT`v$dvDu;m!H!WHUe@hoOZhn|!oD}uJ-Vb543KfvUTrHFa
+zO6?g;_5kl2JV8-1s{zzo%GLmo^3?a|k<Li??WQfz>Mh&@P!e3Rauq9sPMDtD=<a|Z
+z&=j|3?E@7MoOK~k7@X=ojoX*4#0@vyR?7ASVe_^}dH0|KQ2Pc72?`O5vjt9XI|6O9
+zkW8hN*IECtR0y>IawLBOkj3wJJOQoF%n&FUc682SFkDAV(w`WFfFMHR4^KSB5U7Dt
+zyGS0csIBHM)4@(s@?3E9VzKU0R&6v0&FY!QPE)vW_sCVl1Ea+Yn=1sje>!eiyquv^
+zIF6^*k$M2K63x<iq|#Zu{>Ix3pjl^v)?k6j>cZi}M|d(Ut)o>C4XA-af==?0M|W^y
+zR3Y#@q0AIyq8d1P^d{#kRq)Qce-!}KvdQu9;U2)@5%K@bb1#;1)kN#P8UUGW9_efj
+z$y5fP9XM15pfkf@vSahs?F@$`U0Dg#*l%Q`L`qnB&l>I?sf}jG)xk<9W(@(sg;i_r
+z=aVNT&=#3mb9M8i_6>TA8)iok4o@4rEnPTz^w^m3KOum0HiuM(0A!I!Wni&7(X2BH
+z2zm?Jrq4tsn?sgPMcLu23(Sc?s7)4y7eSbF)itFaLCpn~5L6HyT|Kz(Hyd!<k~?5_
+z1WM~SwQr#Kx4MFG`8u#*;Zl~rTB#-tAeG4>m6ni5XE79x;M(hNMw8BnCar*=H`=(g
+zkwPe3)cyJ>5aZ+rRSEPWj~+V?yEDLpRk<`)jM=5IsBN7I04ao2WU~2TcZc8!OvhWh
+zb~h~lx&V@Cp@2jxi&#8`r=R^JnzbfO(;C^ddNXFsx`I`Z=H(+T9_2}aC@01QmsT3E
+zsNAXxm+_V^<<{B3Ei;uyt1}3fw;i+R&gX8lQTf*ekVs2Nk^)i^Vu>`q?L7md+0F`>
+z)@)=o=nNLT^vX^ok{M2z0s>8E6(HpCL8#Lvfw=z0MIsao<X{<qfG`?FW!tPbxnQQ+
+z@1fK0z}vfaH=O;)1Q1UN=i{V+WCs0%5!`X-U1(+i28KYP;PeL3d-{w5AqOg->eUt%
+zgiu3yH?MAVij|>|O!D7x``VzV!HKKFXb6>R5LJTYPtz%tK05t2ELyz01hrB5*9VZy
+zvhzX#84SmgyhPBOY-rLNN)V_jEL^mND+X1Cj6_N(RDcjyVfgzT{ftUko*z>$r&Wf+
+zJMaF5hc4<m#p0D9lmVz}puT~er?4^Gsq}@=+A#|!Po83!jV8Y_0mKq?@>viFQUF2d
+z8yLo2cdv$4XDUIUTY|8D!$!p7X(Tg}s16DQVN|~I=o=Ws_D3GW-n}1+ixv{?{l&!(
+z^<pVOSo@m?c=YCcKnal?Z#I_!D9sXek<=(zodGyKA)Xsp`r~wd4FiZKGKdlc1w=HS
+zMmU<p$=-hWf~^cesGtmC$Ky{To=78^&LUL-LUfc8{`SG&xs#;T+Arr{j{^q|G6+_L
+za@CliP@SJWcb>9>Q&dobU@ifm5MTg~0DiaQiF0<oE`Ufp12Po^-A3YRoEaGA3kiCo
+zwIUQ$2qvt5U?T&doS;JBN|BM!H!uXFg<{);W<51j4s6`K73nnP57AmvvqPQUH~)PS
+z-as3g4OTQ$LM$ahVJZMhns={W%l(A9Hvdil49C(aK~O-@_rtLiPWOkgb=xCc1*kc?
+zOo2c~N%H1f7Nhq}KUa?wms5%J1N9SY*KNQwE~mnp^%h({`zpS&Of53y3Q_^>>JJ?F
+z9A=xBD*{1i(pi+=fbJ6j8(iKH`uhivOeRN-=;sX}97}^Bi~_;QFokd=iT<G|R^Gja
+zX9KPbT73xwslnq5;Pp3mAsSC1p3HD)MB_;u`r<HtK249GHyPLn0x803_u{qJ-$FVq
+z-akMWF{9BKUwL-80}O!FP`#C=ia}ea<ty&SM<4%V)b+&k0x%S%m`|e&LREmc-!~NH
+zyg(3iMk|*@4vC7eAnWX&%~zBD^y=%_`P!S9H~%{P>@r=+2*PE}Mg@c!_pG`P(O3+r
+z6opU*;cx^;jvPf-cMr>5Z>GejnhQpYo43*g!QpAa{A(9r_g~+iR1;Jez+fbWp(t4`
+z2)YeNQ|Rprqi-;ZE!!T2!E9GTVl;@$n)Gbq)b;q;G#!7>&eLPl^d$hQ8oa?aY}vXU
+zf7|;ZhQh-f7L?!?-F7?gBrOgyA8)3u4nN;I+(Ed#t?&jr5Nzv4{Cpds!Qm7b!Wbav
+zmL4Z1^!5#5*X}*=_(R+$FbF+?Fjj$}(<bTb%l9b^2!H~Ck|PaUByUQRW~&<(yPH?=
+zfzWh3_4IRCb?;iVv~|PjX@Ser0=G8=kFO2hKsyg<kNoa2-b<cWBQ!XiJUcL)WC)cY
+z7(!Hmz+mWSNt`+}gcB!EW7!>d!Dw;7V6t(g&>F-TO)y9q!bB^rPM7MKEgZMOV0Q4%
+z!E6(bJKX^u#*Q67!I#Tv%}x1%)N%0O=h(MzKijEOy<AEs+X&HzKI-Ivq(lIOrRsxF
+z)xh^DB!+S7^dR<r_+PkT!6KNfPM8RWnVh1FDwMda42Gsjx=%*1jO4V1exDYv<hYj|
+z@0!_z7hm4VWik?piSb+MC}Z&?VzC5Y-y_M#<4L4asdK3WwQrP+#M39r0LB7Q4hvQT
+zKb{mI&J1GzfiJLr!zOgk=z-NvQg*SN$;>tvJ4%mR9d6hhZrIsrKfJyWx7UAu^$o=1
+zDTIe3h(zM-JP%xIn_W44<;!o)lP6yWkJZisX=!sUfbl^HWzb{k5{TaZFvB?X<x#x)
+z`rFvDZ97)2S%;;!--%n7EW>R}mt)nv>#%w2BY6IWSFmsYXNV_L7#NCRXgG>+B*r~N
+zIxE`g>KQ{_-%}^q=vJyu2>iAN0DvEdqbYf82vs1W^+1$!#OeNF212)|2Zp($JTo|q
+zzQG7v|Bx_pd@vm4PLh@}G?J$?v~!^CQ-0KpQ36qK2hlhPdb|9OssT*VXf&6`5}9Ym
+z2Ow;`ioyAzlqV{BidbcrsmvS+F?><uM2=TFPx}U%G#SEVKuo-~ev*8x`M`umqq*qQ
+zPd~jR97_!}0%4+x!B){o(OglUHN><@Ll=$TWCDQLN|B8PVl;%wfhZP>eE_D``@~2|
+z1@yt9p;#)@D1?bBM!gw>6~JS+q5uVgx|OO0k)IGm%`&D6ge(^`^l7+yr(gL+bS{lZ
+z(ocrt>AuDxj9)S8%@{%j6%Zx@k*x=!Fd+yfKMdw_xqnuiAM;aVrOyr0FH$(f)6!Ez
+zk%<!HWI<%c2a&1{iv~c9ogd^vq4=aC`%5SF;Yp2n56wR%5{Vxr)6%ABJab$$ONq0S
+z1~JBrQN4qh2t;*$s0NXd@@FL}FXi&`F<BnjNUxoIsCYxv<Uc~I5l_DK0=08;TvG?c
+dg>2(~{SQ0qE*@o^6ukfd002ovPDHLkV1jtqJbwTH
+
+literal 0
+HcmV?d00001
+
+diff --git a/apps/desktop/scripts/electron-builder-config.mjs b/apps/desktop/scripts/electron-builder-config.mjs
+index 1fb787803c..0121f4056d 100644
+--- a/apps/desktop/scripts/electron-builder-config.mjs
++++ b/apps/desktop/scripts/electron-builder-config.mjs
+@@ -144,8 +144,9 @@ export function createElectronBuilderConfig(
+     extraResources: [
+       { from: buildPaths.runtime, to: 'runtime' },
+       { from: fileURLToPath(new URL('../resources/icon-windows.png', import.meta.url)), to: 'icon.png' },
+-      // Windows tray bitmaps; macOS keeps the Dock and ships no menu bar icon.
++      // Tray bitmaps for the platforms that keep one; macOS keeps the Dock and ships no menu bar icon.
+       ...(packagesWindows ? [{ from: fileURLToPath(new URL('../resources/tray-windows.ico', import.meta.url)), to: 'tray.ico' }] : []),
++      ...(resolvedPlatform === 'linux' ? [{ from: fileURLToPath(new URL('../resources/tray-linux.png', import.meta.url)), to: 'tray.png' }] : []),
+     ],
+     mac: {
+       icon: fileURLToPath(new URL('../resources/icon-macos.png', import.meta.url)),
+diff --git a/apps/desktop/scripts/render-tray-icon.ts b/apps/desktop/scripts/render-tray-icon.ts
+index 01bacdea5e..c9ccb33bb1 100644
+--- a/apps/desktop/scripts/render-tray-icon.ts
++++ b/apps/desktop/scripts/render-tray-icon.ts
+@@ -1,11 +1,13 @@
+ /**
+- * Render the Windows tray icon with an enlarged whale from `resources/icon-windows.svg`.
++ * Render the tray icons with an enlarged whale from `resources/icon-windows.svg`.
+  *
+  * The tray shows the icon at 16 logical pixels, so Windows picks one of the
+  * bundled bitmaps by display scale. Each size is rasterized from the vector
+  * source separately instead of downscaling one large bitmap, which keeps edges
+- * crisp at every scale. The committed `resources/tray-windows.ico` is the output;
+- * rerun `pnpm run render:tray-icon` in `apps/desktop` after changing the vector source.
++ * crisp at every scale. Linux status notifiers take one PNG that the shell
++ * scales to its own panel size. The committed `resources/tray-windows.ico` and
++ * `resources/tray-linux.png` are the outputs; rerun `pnpm run render:tray-icon`
++ * in `apps/desktop` after changing the vector source.
+  */
+ 
+ import { readFile, writeFile } from 'node:fs/promises'
+@@ -16,10 +18,14 @@ import sharp from 'sharp'
+ /** Bitmap edge lengths bundled in the tray icon: 16 px at 100 % through 400 % display scale. */
+ export const TRAY_ICON_SIZES = [16, 20, 24, 32, 40, 48, 64] as const
+ 
+-/** Vector source and committed output of the tray icon. */
++/** Edge length of the Linux status-notifier PNG, sized well above any panel scale. */
++export const TRAY_LINUX_ICON_SIZE = 64
++
++/** Vector source and committed outputs of the tray icons. */
+ export const TRAY_ICON_PATHS = {
+   source: fileURLToPath(new URL('../resources/icon-windows.svg', import.meta.url)),
+   output: fileURLToPath(new URL('../resources/tray-windows.ico', import.meta.url)),
++  linuxOutput: fileURLToPath(new URL('../resources/tray-linux.png', import.meta.url)),
+ } as const
+ 
+ /** Coordinate space of the vector source; sharp's SVG density is scaled against it. */
+@@ -98,26 +104,48 @@ export function unpackIco(ico: Buffer): IcoEntry[] {
+  * @returns PNG entries in the given order.
+  */
+ export async function renderTrayIconEntries(svg: Buffer, sizes: readonly number[] = TRAY_ICON_SIZES): Promise<IcoEntry[]> {
+-  const source = svg.toString('utf8')
+-  const glyph = '<g id="tray-glyph"'
+-  if (!source.includes(glyph)) throw new Error('tray icon: SVG requires a tray-glyph group')
+-  // Scale around the application tile center, retaining its background and the whale's aspect ratio.
+-  const tray = Buffer.from(source.replace(glyph, `${glyph} transform="translate(552 544) scale(1.2) translate(-552 -544)"`))
++  const tray = trayGlyphSource(svg)
+   return Promise.all(sizes.map(async size => ({
+     size,
+     png: await sharp(tray, { density: SOURCE_DENSITY * size / SOURCE_EDGE }).resize(size, size).png().toBuffer(),
+   })))
+ }
+ 
++/**
++ * Scale the whale around the application tile center inside the SVG source.
++ * @param svg - SVG document with a `tray-glyph` group.
++ * @returns The transformed SVG document.
++ */
++function trayGlyphSource(svg: Buffer): Buffer {
++  const source = svg.toString('utf8')
++  const glyph = '<g id="tray-glyph"'
++  if (!source.includes(glyph)) throw new Error('tray icon: SVG requires a tray-glyph group')
++  // Scale around the application tile center, retaining its background and the whale's aspect ratio.
++  return Buffer.from(source.replace(glyph, `${glyph} transform="translate(552 544) scale(1.2) translate(-552 -544)"`))
++}
++
++/**
++ * Render the single PNG a Linux status notifier uses.
++ * @param svg - SVG document with a 1024-unit square viewBox and a `tray-glyph` group.
++ * @param size - Square edge length of the rendered PNG.
++ * @returns PNG bytes.
++ */
++export async function renderTrayIconPng(svg: Buffer, size: number = TRAY_LINUX_ICON_SIZE): Promise<Buffer> {
++  return sharp(trayGlyphSource(svg), { density: SOURCE_DENSITY * size / SOURCE_EDGE }).resize(size, size).png().toBuffer()
++}
++
+ function pngDimensions(png: Buffer): { width: number; height: number } {
+   if (png.length < 24 || !png.subarray(0, PNG_SIGNATURE.length).equals(PNG_SIGNATURE)) throw new Error('tray icon: bitmap is not a PNG stream')
+   return { width: png.readUInt32BE(16), height: png.readUInt32BE(20) }
+ }
+ 
+ async function main(): Promise<void> {
+-  const entries = await renderTrayIconEntries(await readFile(TRAY_ICON_PATHS.source))
++  const source = await readFile(TRAY_ICON_PATHS.source)
++  const entries = await renderTrayIconEntries(source)
+   await writeFile(TRAY_ICON_PATHS.output, packIco(entries))
+   console.info(`tray icon: wrote ${TRAY_ICON_PATHS.output} with ${entries.map(entry => String(entry.size)).join(', ')} px bitmaps`)
++  await writeFile(TRAY_ICON_PATHS.linuxOutput, await renderTrayIconPng(source))
++  console.info(`tray icon: wrote ${TRAY_ICON_PATHS.linuxOutput} at ${String(TRAY_LINUX_ICON_SIZE)} px`)
+ }
+ 
+ if (process.argv[1] !== undefined && import.meta.filename === resolve(process.argv[1])) await main()
+diff --git a/apps/desktop/src/main.ts b/apps/desktop/src/main.ts
+index b4b8153b7f..c7952204b5 100644
+--- a/apps/desktop/src/main.ts
++++ b/apps/desktop/src/main.ts
+@@ -981,8 +981,13 @@ async function main(): Promise<void> {
+     tray?.relabel()
+   }
+   refreshApplicationMenu()
+-  const trayIconPath = development ? join(app.getAppPath(), 'resources', 'tray-windows.ico') : join(process.resourcesPath, 'tray.ico')
+-  if (process.platform === 'win32') {
++  const trayOnWindows = process.platform === 'win32'
++  // Windows takes the multi-size ICO; Linux status notifiers take one PNG; macOS reaches the
++  // application through the Dock instead.
++  const trayIconPath = trayOnWindows
++    ? (development ? join(app.getAppPath(), 'resources', 'tray-windows.ico') : join(process.resourcesPath, 'tray.ico'))
++    : (development ? join(app.getAppPath(), 'resources', 'tray-linux.png') : join(process.resourcesPath, 'tray.png'))
++  if (trayOnWindows || process.platform === 'linux') {
+     // The tray is the way back to a hidden window; without it, relaunching the application still focuses it.
+     try {
+       tray = new DesktopTray({ iconPath: trayIconPath, locale: currentDesktopLocale,
+diff --git a/apps/desktop/src/tray.ts b/apps/desktop/src/tray.ts
+index b2ce416bbc..48f34304c9 100644
+--- a/apps/desktop/src/tray.ts
++++ b/apps/desktop/src/tray.ts
+@@ -1,11 +1,11 @@
+-/** Windows system tray: the always-present way back to a hidden window and the explicit quit entry. */
++/** Windows and Linux status tray: the always-present way back to a hidden window and the explicit quit entry. */
+ 
+ import { Menu, nativeImage, Tray } from 'electron'
+ import type { DesktopLocale } from './locale.ts'
+ 
+ /** Main-process actions the tray triggers; both run the same paths as the window and application menu. */
+ export interface DesktopTrayOptions {
+-  /** Multi-size ICO rendered by `scripts/render-tray-icon.ts`; Windows picks the bitmap for the display scale. */
++  /** Windows takes the multi-size ICO and picks the bitmap for the display scale; Linux takes the PNG its notifier scales. */
+   readonly iconPath: string
+   readonly locale: () => DesktopLocale
+   /** Show and focus the primary window. */
+diff --git a/scripts/package-linux-desktop.ts b/scripts/package-linux-desktop.ts
+new file mode 100644
+index 0000000000..690ff1d0dc
+--- /dev/null
++++ b/scripts/package-linux-desktop.ts
+@@ -0,0 +1,409 @@
++/**
++ * Standalone Linux Desktop packager for DeepSeek Harness (deb and AppImage).
++ */
++
++import { spawn, spawnSync, execFileSync } from 'node:child_process'
++import {
++  cpSync,
++  existsSync,
++  mkdirSync,
++  mkdtempSync,
++  readFileSync,
++  readdirSync,
++  rmSync,
++  writeFileSync,
++  chmodSync,
++  copyFileSync,
++  statSync,
++} from 'node:fs'
++import { createHash } from 'node:crypto'
++import { tmpdir } from 'node:os'
++import { basename, delimiter, join, relative, resolve, sep } from 'node:path'
++import { createRequire } from 'node:module'
++const ROOT = resolve(import.meta.dirname, '..')
++const desktopRequire = createRequire(join(ROOT, 'apps', 'desktop', 'package.json'))
++const { downloadArtifact } = desktopRequire('@electron/get')
++const extractZip = desktopRequire('extract-zip')
++
++import { preparePrimaryRuntime, smokePrimaryRuntime } from './primary-runtime/prepare.ts'
++import { selectDesktopPackageClosure, type PackedDesktopPackage } from '../apps/desktop/scripts/prepare-package-set.ts'
++import { parseDesktopRelease } from '../apps/desktop/src/release.ts'
++import {
++  DESKTOP_HOST_PACKAGE,
++  DESKTOP_HOST_RUNTIME_FILES,
++  DESKTOP_PACKAGES_DIR,
++  DESKTOP_PACKAGE_SET_FILE,
++  readDesktopCorePackageSet,
++  verifyDesktopCoreLockfile,
++  type DesktopCorePackageRecord,
++} from '../apps/desktop/src/core-package-set.ts'
++import { DESKTOP_HOST_PROTOCOL_VERSION } from '../apps/desktop/src/host-protocol.ts'
++import { createRuntimeProjectMetadata } from '../apps/desktop/src/project-manager.ts'
++import { writeDesktopRuntime, verifyDesktopRuntime } from '../apps/desktop/src/runtime-tree.ts'
++import { selectOfficeEngine, officePackageDirectories } from './libreoffice-packages.mjs'
++import { desktopRuntimeFileExclusion } from '../apps/desktop/scripts/runtime-file-policy.ts'
++import { prepareRuntimeManifests } from '../apps/desktop/scripts/prepare-runtime-manifests.ts'
++import { desktopNodeEnvironment } from '../apps/desktop/src/node-environment.ts'
++
++const DESKTOP_ROOT = join(ROOT, 'apps', 'desktop')
++const BUILD_ROOT = join(DESKTOP_ROOT, '.desktop-build', 'targets', 'linux-x64')
++const ARTIFACTS_DIR = join(ROOT, 'dist', 'desktop')
++const DOWNLOADS_DIR = join(DESKTOP_ROOT, '.desktop-build', 'downloads')
++
++const RUNTIME_ROOT = join(BUILD_ROOT, 'runtime')
++const ELECTRON_DIR = join(BUILD_ROOT, 'electron')
++const DSH_OUTPUT_ROOT = join(BUILD_ROOT, 'dsh')
++const PACKAGE_SET_ROOT = join(BUILD_ROOT, 'package-set')
++const PACKED_ROOT = join(BUILD_ROOT, 'packed')
++const PACKED_DSH = join(PACKED_ROOT, 'dsh')
++const PACKED_VENDOR = join(PACKED_ROOT, 'vendor')
++const PACKED_LANDLOCK = join(PACKED_ROOT, 'landlock')
++
++console.log('==> 1. Setting up directory layout...')
++mkdirSync(BUILD_ROOT, { recursive: true })
++mkdirSync(ARTIFACTS_DIR, { recursive: true })
++mkdirSync(DOWNLOADS_DIR, { recursive: true })
++mkdirSync(PACKED_DSH, { recursive: true })
++mkdirSync(PACKED_VENDOR, { recursive: true })
++mkdirSync(PACKED_LANDLOCK, { recursive: true })
++
++console.log('==> 2. Copying packed tarballs from dist/ ...')
++for (const [directory, label] of [
++  [join(ROOT, 'dist', 'npm'), 'dsh'],
++  [join(ROOT, 'dist', 'npm-vendor'), 'vendor'],
++  [join(ROOT, 'dist', 'npm-landlock'), 'landlock'],
++] as const) {
++  if (!existsSync(directory)) {
++    throw new Error(`Linux desktop packaging needs ${directory}. Build it first:\n`
++      + '  pnpm run build:official\n'
++      + '  pnpm run release:pack --family dsh --out dist/npm\n'
++      + '  pnpm run release:pack --family vendor --out dist/npm-vendor\n'
++      + '  pnpm --dir native/system run build:ts\n'
++      + '  pnpm --dir native/system/packages/entry pack --pack-destination "$PWD/dist/npm-landlock"')
++  }
++  console.log(`    ${label}: ${directory}`)
++}
++cpSync(join(ROOT, 'dist', 'npm'), PACKED_DSH, { recursive: true })
++// Also pack desktop-host into PACKED_DSH
++const packDesktopHost = spawnSync('pnpm', ['--dir', 'apps/desktop-host', 'pack', '--pack-destination', PACKED_DSH], {
++  cwd: ROOT,
++  stdio: 'inherit',
++})
++if (packDesktopHost.status !== 0) throw new Error('Failed to pack apps/desktop-host')
++
++cpSync(join(ROOT, 'dist', 'npm-vendor'), PACKED_VENDOR, { recursive: true })
++cpSync(join(ROOT, 'dist', 'npm-landlock'), PACKED_LANDLOCK, { recursive: true })
++
++console.log('==> 3. Preparing Electron and runtime...')
++const require = createRequire(import.meta.url)
++const { version: electronVersion } = require('electron/package.json') as { version: string }
++
++// Download electron for linux-x64 if not already present
++if (!existsSync(join(ELECTRON_DIR, 'electron'))) {
++  console.log(`Downloading electron v${electronVersion} for linux-x64...`)
++  const electronArchive = await downloadArtifact({
++    version: electronVersion,
++    platform: 'linux',
++    arch: 'x64',
++    artifactName: 'electron',
++    cacheRoot: DOWNLOADS_DIR,
++    // Only redirect the download when a mirror is configured; the default source is used otherwise.
++    ...(process.env.ELECTRON_MIRROR === undefined || process.env.ELECTRON_MIRROR === ''
++      ? {}
++      : { mirrorOptions: { mirror: process.env.ELECTRON_MIRROR } }),
++  })
++  rmSync(ELECTRON_DIR, { recursive: true, force: true })
++  await extractZip(electronArchive, { dir: ELECTRON_DIR })
++}
++const NODE = join(ELECTRON_DIR, 'electron')
++
++// Prepare pnpm in runtime
++function preparePnpm(): string {
++  const pnpmManifestPath = require.resolve('pnpm')
++  const pnpmManifest = JSON.parse(readFileSync(pnpmManifestPath, 'utf8')) as { version?: unknown }
++  const pnpmDir = resolve(pnpmManifestPath, '..')
++  const pnpmDest = join(RUNTIME_ROOT, 'pnpm')
++  rmSync(pnpmDest, { recursive: true, force: true })
++  cpSync(pnpmDir, pnpmDest, { recursive: true })
++  return pnpmManifest.version as string
++}
++
++rmSync(RUNTIME_ROOT, { recursive: true, force: true })
++mkdirSync(RUNTIME_ROOT, { recursive: true })
++const pnpmVersion = preparePnpm()
++cpSync(join(DESKTOP_ROOT, 'scripts', 'node-bin'), join(RUNTIME_ROOT, 'bin'), { recursive: true })
++chmodSync(join(RUNTIME_ROOT, 'bin', 'node'), 0o755)
++
++// Write versions.json
++const nodeVersion = execFileSync(NODE, ['-p', 'process.versions.node'], {
++  encoding: 'utf8',
++  env: { ...process.env, ELECTRON_RUN_AS_NODE: '1' },
++}).trim()
++
++writeFileSync(join(RUNTIME_ROOT, 'versions.json'), `${JSON.stringify({
++  schemaVersion: 1,
++  node: nodeVersion,
++  pnpm: pnpmVersion,
++}, null, 2)}\n`)
++
++// Prepare primary-runtime (Node, Python, LibreOffice python wheels, office-skills)
++console.log('==> 4. Preparing primary-runtime...')
++const { version: dshVersion } = JSON.parse(readFileSync(join(ROOT, 'package.json'), 'utf8')) as { version: string }
++await preparePrimaryRuntime({
++  target: 'linux-x64',
++  output: RUNTIME_ROOT,
++  cache: DOWNLOADS_DIR,
++  version: dshVersion,
++})
++smokePrimaryRuntime(join(RUNTIME_ROOT, 'primary-runtime'))
++
++// Prepare package set
++console.log('==> 5. Preparing Desktop package set...')
++function packedManifest(tarball: string): Record<string, unknown> {
++  const value: unknown = JSON.parse(execFileSync('tar', ['-xOzf', tarball, 'package/package.json'], { encoding: 'utf8' }))
++  return value as Record<string, unknown>
++}
++
++const available = new Map<string, PackedDesktopPackage>()
++for (const dir of [PACKED_DSH, PACKED_VENDOR, PACKED_LANDLOCK]) {
++  for (const file of readdirSync(dir).filter(f => f.endsWith('.tgz'))) {
++    const tarball = join(dir, file)
++    const manifest = packedManifest(tarball)
++    const name = manifest.name as string
++    if (available.has(name)) continue
++    available.set(name, { tarball, manifest })
++  }
++}
++
++const selected = selectDesktopPackageClosure(available)
++rmSync(PACKAGE_SET_ROOT, { recursive: true, force: true })
++const packageDir = join(PACKAGE_SET_ROOT, DESKTOP_PACKAGES_DIR)
++mkdirSync(packageDir, { recursive: true })
++const records: DesktopCorePackageRecord[] = selected.map((packed) => {
++  const name = packed.manifest.name as string
++  const version = packed.manifest.version as string
++  const file = basename(packed.tarball)
++  const destination = join(packageDir, file)
++  copyFileSync(packed.tarball, destination)
++  const body = readFileSync(destination)
++  return {
++    name,
++    version,
++    file,
++    bytes: statSync(destination).size,
++    integrity: `sha512-${createHash('sha512').update(body).digest('base64')}`,
++  }
++})
++const packageSet = { schemaVersion: 1, packages: records }
++writeFileSync(join(PACKAGE_SET_ROOT, DESKTOP_PACKAGE_SET_FILE), `${JSON.stringify(packageSet, null, 2)}\n`, { mode: 0o600 })
++
++// Reuse materialized DSH runtime if present
++if (existsSync(DSH_OUTPUT_ROOT) && existsSync(join(DSH_OUTPUT_ROOT, 'package.json')) && existsSync(join(DSH_OUTPUT_ROOT, 'node_modules'))) {
++  console.log('==> 7. Reusing already materialized DSH production runtime...')
++} else {
++  console.log('==> 7. Materializing DSH production modules via pnpm install...')
++  const DSH_TEMP_BUILD = mkdtempSync(join(tmpdir(), 'dsh-desktop-linux-'))
++  const STORE_ROOT = join(DSH_TEMP_BUILD, 'store')
++  const PNPM_BUILD_STATE = join(BUILD_ROOT, 'dsh-pnpm')
++  const PNPM = join(RUNTIME_ROOT, 'pnpm', 'bin', 'pnpm.mjs')
++
++  copyFileSync(join(PACKAGE_SET_ROOT, DESKTOP_PACKAGE_SET_FILE), join(DSH_TEMP_BUILD, DESKTOP_PACKAGE_SET_FILE))
++  cpSync(join(PACKAGE_SET_ROOT, DESKTOP_PACKAGES_DIR), join(DSH_TEMP_BUILD, DESKTOP_PACKAGES_DIR), { recursive: true })
++
++  const release = parseDesktopRelease({
++    schemaVersion: 1,
++    version: dshVersion,
++    hostProtocolVersion: DESKTOP_HOST_PROTOCOL_VERSION,
++    nodeVersion,
++    pnpmVersion,
++  })
++  createRuntimeProjectMetadata(DSH_TEMP_BUILD, release)
++
++  const pnpmConfig = join(PNPM_BUILD_STATE, 'config')
++  const userConfig = join(pnpmConfig, 'npmrc')
++  mkdirSync(pnpmConfig, { recursive: true })
++  writeFileSync(userConfig, '')
++
++  function runDshPnpm(args: string[]): void {
++    const res = spawnSync(NODE, [
++      '--expose-internals',
++      PNPM,
++      `--config.store-dir=${STORE_ROOT}`,
++      '--config.enable-global-virtual-store=false',
++      `--config.userconfig=${userConfig}`,
++      ...args,
++    ], {
++      cwd: DSH_TEMP_BUILD,
++      env: {
++        ...Object.fromEntries(Object.entries(process.env).filter(([name]) => (
++          name !== 'NODE_OPTIONS' && name !== 'NODE_PATH' && !/^DSH_DESKTOP_/u.test(name) && !/^(?:npm|pnpm|corepack)_/iu.test(name)
++        ))),
++        NPM_CONFIG_STORE_DIR: STORE_ROOT,
++        NPM_CONFIG_USERCONFIG: userConfig,
++        ...desktopNodeEnvironment(NODE, join(RUNTIME_ROOT, 'bin'), {}),
++        PATH: `${join(RUNTIME_ROOT, 'bin')}${delimiter}${process.env.PATH ?? ''}`,
++        XDG_CACHE_HOME: join(PNPM_BUILD_STATE, 'cache'),
++        XDG_CONFIG_HOME: pnpmConfig,
++        XDG_STATE_HOME: join(PNPM_BUILD_STATE, 'state'),
++      },
++      stdio: 'inherit',
++    })
++    if (res.status !== 0) throw new Error(`pnpm ${args.join(' ')} failed with exit code ${res.status}`)
++  }
++
++  runDshPnpm(['install', '--lockfile-only'])
++  verifyDesktopCoreLockfile(
++    readFileSync(join(DSH_TEMP_BUILD, 'pnpm-lock.yaml'), 'utf8'),
++    readDesktopCorePackageSet(DSH_TEMP_BUILD, release.version),
++  )
++  runDshPnpm(['install', '--prod', '--frozen-lockfile', '--trust-lockfile'])
++
++  const target = { platform: 'linux' as const, arch: 'x64' as const }
++  const modules = join(DSH_TEMP_BUILD, 'node_modules')
++  const officeManifest = JSON.parse(readFileSync(join(modules, '@deepseek-ai/libreoffice-kit/package.json'), 'utf8'))
++  const officeEngine = selectOfficeEngine(officeManifest, target)
++
++  rmSync(DSH_OUTPUT_ROOT, { recursive: true, force: true })
++  mkdirSync(DSH_OUTPUT_ROOT, { recursive: true })
++  cpSync(modules, join(DSH_OUTPUT_ROOT, 'node_modules'), {
++    recursive: true,
++    dereference: true,
++    filter: source => desktopRuntimeFileExclusion(relative(modules, source), target, officeEngine) === undefined,
++  })
++
++  writeFileSync(join(DSH_OUTPUT_ROOT, 'package.json'), `${JSON.stringify({
++    name: '@deepseek-ai/dsh-desktop-runtime',
++    private: true,
++    version: release.version,
++    type: 'module',
++    dependencies: Object.fromEntries(packageSet.packages.map(entry => [entry.name, entry.version])),
++  }, null, 2)}\n`)
++
++  prepareRuntimeManifests(DSH_OUTPUT_ROOT)
++  writeDesktopRuntime(DSH_OUTPUT_ROOT, release, packageSet.packages.map(entry => entry.name), target)
++  verifyDesktopRuntime(DSH_OUTPUT_ROOT, release.version, target)
++
++  rmSync(DSH_TEMP_BUILD, { recursive: true, force: true })
++  rmSync(PNPM_BUILD_STATE, { recursive: true, force: true })
++}
++
++console.log('==> 8. Configuring electron-builder for Linux (.deb & .AppImage)...')
++const builderConfigFile = join(BUILD_ROOT, 'electron-builder.linux.json')
++// The Desktop Host runs the Office kit CLI as a separate Node process, which cannot read inside an
++// ASAR archive, so every Office package the kit resolves must stay unpacked beside app.asar.
++const officePatterns = (await officePackageDirectories(DSH_OUTPUT_ROOT, { platform: 'linux', arch: 'x64' }))
++  .map(directory => `**/${relative(DSH_OUTPUT_ROOT, directory).split(sep).join('/')}/**/*`)
++// A freedesktop theme only resolves icons from the size directories its index.theme lists, so the
++// single 1104x1104 source would install into an unindexed hicolor/1104x1104/apps and the dock, app
++// grid, and window switcher would all fall back to a generic icon. Rendering the standard sizes
++// gives electron-builder an icon set instead of one image.
++const iconSetDir = join(BUILD_ROOT, 'icons')
++rmSync(iconSetDir, { recursive: true, force: true })
++mkdirSync(iconSetDir, { recursive: true })
++const sharp = desktopRequire('sharp') as (input: string) => {
++  resize: (width: number, height: number) => { png: () => { toFile: (path: string) => Promise<unknown> } }
++}
++for (const size of [16, 24, 32, 48, 64, 128, 256, 512, 1024]) {
++  await sharp(join(DESKTOP_ROOT, 'resources', 'icon.png'))
++    .resize(size, size)
++    .png()
++    .toFile(join(iconSetDir, `${size}x${size}.png`))
++}
++const builderConfig = {
++  appId: 'com.deepseek.harness',
++  productName: 'DeepSeek Harness',
++  protocols: [{ name: 'DeepSeek Harness', schemes: ['dsh'] }],
++  extraMetadata: {
++    dshDesktopAppId: 'com.deepseek.harness',
++    version: dshVersion,
++    // Electron derives app_id/WM_CLASS from desktopName; StartupWMClass then matches the running window.
++    desktopName: 'deepseek-harness',
++    homepage: 'https://github.com/deepseek-ai/deepseek-harness',
++    author: {
++      name: 'DeepSeek',
++      email: 'support@deepseek.com',
++    },
++  },
++  directories: {
++    output: ARTIFACTS_DIR,
++  },
++  asar: true,
++  electronDist: ELECTRON_DIR,
++  electronFuses: { runAsNode: true },
++  files: [
++    'lib/main.js',
++    'lib/welcome/**/*',
++    'lib/preload-app.cjs',
++    'lib/preload-mandatory.cjs',
++    'lib/preload-platform-account.cjs',
++    'lib/preload-update-dialog.cjs',
++    'lib/preload-welcome.cjs',
++    'renderer/**/*',
++    'package.json',
++    { from: DSH_OUTPUT_ROOT, to: 'dsh', filter: ['**/*'] },
++    { from: join(DSH_OUTPUT_ROOT, 'node_modules'), to: 'dsh/node_modules', filter: ['**/*'] },
++  ],
++  asarUnpack: [
++    '**/*.{node,dylib,dll,so,exe}',
++    '**/*.so.*',
++    '**/spawn-helper',
++    '**/@vscode/ripgrep-*/bin/rg',
++    ...officePatterns,
++  ],
++  extraResources: [
++    { from: RUNTIME_ROOT, to: 'runtime' },
++    { from: join(DESKTOP_ROOT, 'resources', 'icon.png'), to: 'icon.png' },
++    // The main process reads this back through process.resourcesPath/tray.png.
++    { from: join(DESKTOP_ROOT, 'resources', 'tray-linux.png'), to: 'tray.png' },
++  ],
++  linux: {
++    executableName: 'deepseek-harness',
++    artifactName: 'deepseek-harness-${version}-${arch}.${ext}',
++    syncDesktopName: true,
++    icon: iconSetDir,
++    category: 'Development',
++    maintainer: 'DeepSeek <support@deepseek.com>',
++    synopsis: 'DeepSeek Harness desktop application',
++    target: ['deb', 'AppImage'],
++  },
++  deb: {
++    packageName: 'deepseek-harness',
++    artifactName: 'deepseek-harness_${version}_${arch}.${ext}',
++    depends: ['libnotify4', 'libxtst6', 'libnss3'],
++  },
++}
++
++writeFileSync(builderConfigFile, `${JSON.stringify(builderConfig, null, 2)}\n`)
++
++console.log('==> 9. Running electron-builder to generate .deb and .AppImage...')
++const buildProc = spawnSync(
++  'pnpm',
++  [
++    '--dir',
++    'apps/desktop',
++    'exec',
++    'electron-builder',
++    '--config',
++    builderConfigFile,
++    '--linux',
++    '--x64',
++    '--publish',
++    'never',
++  ],
++  {
++    cwd: ROOT,
++    stdio: 'inherit',
++    env: { ...process.env },
++  },
++)
++
++if (buildProc.status !== 0) {
++  throw new Error(`electron-builder exited with code ${buildProc.status}`)
++}
++
++console.log('==> Packaging complete! Artifacts in dist/desktop:')
++const artifacts = readdirSync(ARTIFACTS_DIR)
++for (const art of artifacts) {
++  const stat = statSync(join(ARTIFACTS_DIR, art))
++  console.log(`  - ${art} (${(stat.size / 1024 / 1024).toFixed(2)} MB)`)
++}

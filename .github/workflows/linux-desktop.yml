@@ -1,0 +1,212 @@
+# Build the DeepSeek Harness Linux desktop (.deb and .AppImage) from the official
+# source at an official release tag.
+#
+# The scheduled run resolves the newest official `dsh-v*` tag, checks the source
+# tree out at that exact tag, applies the Linux desktop patches kept in
+# `patches/`, builds the packages, and publishes them as a GitHub Release under
+# the same tag name. The packaged version therefore always equals the official
+# version, because it is read from the tag's own `package.json`.
+#
+# A tag that already has a release is skipped, so the schedule is idempotent and
+# a manual dispatch can rebuild one tag with `force`.
+name: Linux desktop package
+
+on:
+  schedule:
+    # 03:17 Asia/Shanghai every day; the offset keeps the run out of the top-of-hour rush.
+    - cron: '17 19 * * *'
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: 'Official dsh-v* tag to build; empty builds the newest one'
+        required: false
+        type: string
+      force:
+        description: 'Rebuild even when a release for that tag already exists'
+        required: false
+        default: false
+        type: boolean
+
+permissions:
+  contents: write
+
+concurrency:
+  group: linux-desktop-package
+  cancel-in-progress: false
+
+env:
+  UPSTREAM_REPOSITORY: deepseek-ai/deepseek-harness
+
+jobs:
+  resolve:
+    name: Resolve official tag
+    runs-on: ubuntu-24.04
+    outputs:
+      tag: ${{ steps.resolve.outputs.tag }}
+      exists: ${{ steps.resolve.outputs.exists }}
+    steps:
+      - name: Resolve the tag to build
+        id: resolve
+        env:
+          INPUT_TAG: ${{ inputs.tag }}
+          FORCE: ${{ inputs.force }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          if [ -n "${INPUT_TAG:-}" ]; then
+            tag="$INPUT_TAG"
+          else
+            tag=$(git ls-remote --tags --refs "https://github.com/${UPSTREAM_REPOSITORY}.git" \
+              | awk -F/ '{print $NF}' | grep -E '^dsh-v[0-9]' | sort -V | tail -n 1 || true)
+          fi
+          if [ -z "$tag" ]; then
+            echo "::error::No official dsh-v* tag found in ${UPSTREAM_REPOSITORY}"
+            exit 1
+          fi
+          echo "Resolved tag: $tag"
+          if [ "${FORCE:-false}" = 'true' ]; then
+            exists=false
+          elif gh release view "$tag" --repo "$GITHUB_REPOSITORY" >/dev/null 2>&1; then
+            exists=true
+          else
+            exists=false
+          fi
+          echo "Release already published: $exists"
+          echo "tag=$tag" >> "$GITHUB_OUTPUT"
+          echo "exists=$exists" >> "$GITHUB_OUTPUT"
+
+  package:
+    name: Build .deb and .AppImage
+    needs: resolve
+    if: needs.resolve.outputs.exists == 'false'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 240
+    env:
+      TAG: ${{ needs.resolve.outputs.tag }}
+      SOURCE_DIR: ${{ github.workspace }}/source
+    steps:
+      - name: Check out the packaging repository
+        uses: actions/checkout@v4
+
+      - name: Free disk space
+        run: |
+          set -euo pipefail
+          sudo rm -rf /usr/share/dotnet /usr/local/lib/android /opt/ghc /opt/hostedtoolcache/CodeQL \
+            /usr/local/share/boost /usr/share/swift /usr/local/.ghcup
+          sudo apt-get clean
+          df -h /
+
+      - name: Check out official source at the tag
+        run: |
+          set -euo pipefail
+          git clone --depth 1 --branch "$TAG" \
+            "https://github.com/${UPSTREAM_REPOSITORY}.git" "$SOURCE_DIR"
+          cd "$SOURCE_DIR"
+          echo "commit=$(git rev-parse HEAD)" >> "$GITHUB_ENV"
+
+      - name: Apply Linux desktop patches
+        run: |
+          set -euo pipefail
+          cd "$SOURCE_DIR"
+          for patch in "$GITHUB_WORKSPACE"/patches/*.patch; do
+            echo "Applying $(basename "$patch")"
+            git apply --verbose "$patch"
+          done
+
+      - name: Verify the packaged version matches the official tag
+        run: |
+          set -euo pipefail
+          cd "$SOURCE_DIR"
+          version=$(node -p "require('./package.json').version")
+          if [ "dsh-v${version}" != "$TAG" ]; then
+            echo "::error::Source version ${version} does not match tag ${TAG}"
+            exit 1
+          fi
+          echo "VERSION=$version" >> "$GITHUB_ENV"
+          echo "Building DeepSeek Harness ${version} from ${TAG}"
+
+      - name: Set up pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 11.7.0
+          run_install: false
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          package-manager-cache: false
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+        working-directory: ${{ env.SOURCE_DIR }}
+
+      - name: Build the repository
+        run: pnpm run build:official
+        working-directory: ${{ env.SOURCE_DIR }}
+
+      - name: Pack the release tarballs the desktop runtime installs
+        working-directory: ${{ env.SOURCE_DIR }}
+        run: |
+          set -euo pipefail
+          pnpm run release:pack --family dsh --out dist/npm --concurrency 8
+          pnpm run release:pack --family vendor --out dist/npm-vendor --concurrency 8
+          pnpm --dir native/system run build:ts
+          pnpm --dir native/system/packages/entry pack --pack-destination "$PWD/dist/npm-landlock"
+
+      - name: Package the Linux desktop
+        working-directory: ${{ env.SOURCE_DIR }}
+        run: pnpm exec tsx scripts/package-linux-desktop.ts
+
+      - name: Collect artifacts
+        working-directory: ${{ env.SOURCE_DIR }}
+        run: |
+          set -euo pipefail
+          mkdir -p "$GITHUB_WORKSPACE/artifacts"
+          cp dist/desktop/*.deb dist/desktop/*.AppImage "$GITHUB_WORKSPACE/artifacts/"
+          cd "$GITHUB_WORKSPACE/artifacts"
+          sha256sum ./* > SHA256SUMS.txt
+          ls -lh
+
+      - name: Verify the built packages carry the official version
+        working-directory: ${{ env.SOURCE_DIR }}
+        run: |
+          set -euo pipefail
+          deb=$(ls dist/desktop/*.deb)
+          deb_version=$(dpkg-deb --field "$deb" Version)
+          # Debian normalizes the prerelease separator - to ~, so compare in that spelling.
+          expected=${VERSION//-/\~}
+          echo "package.json: ${VERSION}  deb control: ${deb_version}"
+          if [ "$deb_version" != "$expected" ]; then
+            echo "::error::Built deb version ${deb_version} does not match the official ${VERSION}"
+            exit 1
+          fi
+          echo "Included in the deb:"
+          dpkg-deb --contents "$deb" | grep -F -e 'tray.png' -e '256x256/apps/deepseek-harness.png'
+
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: deepseek-harness-linux-desktop-${{ needs.resolve.outputs.tag }}
+          path: artifacts/*
+          if-no-files-found: error
+          retention-days: 30
+
+      - name: Publish the release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          cd "$GITHUB_WORKSPACE/artifacts"
+          gh release create "$TAG" \
+            --repo "$GITHUB_REPOSITORY" \
+            --title "DeepSeek Harness ${VERSION} — Linux desktop" \
+            --notes "Linux desktop packages for the official release ${TAG}.
+
+          Built from ${UPSTREAM_REPOSITORY} at commit ${commit} with the patches in patches/.
+
+          - deepseek-harness_${VERSION}_amd64.deb — installs to /opt/DeepSeek Harness and registers a desktop entry.
+          - deepseek-harness-${VERSION}-x86_64.AppImage — single-file, run with chmod +x first.
+
+          The packaged version matches the official version ${VERSION}." \
+            ./*.deb ./*.AppImage ./SHA256SUMS.txt

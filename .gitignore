@@ -1,0 +1,4 @@
+# Build output and editor residue never belong in this repository.
+artifacts/
+node_modules/
+.DS_Store
