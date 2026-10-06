@@ -3,7 +3,7 @@ new file mode 100644
 index 0000000000..854e7ec33d
 --- /dev/null
 +++ b/scripts/package-mac-desktop.ts
-@@ -0,0 +1,429 @@
+@@ -0,0 +1,421 @@
 +/**
 + * Standalone macOS x64 Desktop packager for DeepSeek Harness (DMG and ZIP).
 + * Supports unnotarized / local ad-hoc signed builds.
@@ -111,16 +111,10 @@ index 0000000000..854e7ec33d
 +
 +console.log('==> 3. Preparing Electron and runtime...')
 +const require = createRequire(import.meta.url)
-+// Pin the Electron build this packager downloads instead of following the upstream `electron`
-+// dependency; see scripts/package-linux-desktop.ts for why 44.0.0 is unusable. Override
-+// DSH_ELECTRON_VERSION to move to a newer build without editing this patch.
-+const electronVersion = process.env.DSH_ELECTRON_VERSION ?? '44.5.1'
++const { version: electronVersion } = require('electron/package.json') as { version: string }
 +
-+// Re-download unless the cached tree is exactly this Electron version.
-+const cachedElectronVersion = existsSync(join(ELECTRON_DIR, 'version'))
-+  ? readFileSync(join(ELECTRON_DIR, 'version'), 'utf8').trim()
-+  : undefined
-+if (cachedElectronVersion !== electronVersion) {
++// Download electron for darwin-<arch> if not already present
++if (!existsSync(join(ELECTRON_DIR, 'Electron.app'))) {
 +  console.log(`    Downloading Electron v${electronVersion} for darwin-${TARGET_ARCH}...`)
 +  const electronZip = await downloadArtifact({
 +    version: electronVersion,
@@ -146,9 +140,7 @@ index 0000000000..854e7ec33d
 +  // fallback to 13.0
 +}
 +
-+// Fallback for hosts that cannot execute the bundled Electron; tracks the pin above
-+// (Electron 44.5.1 bundles Node 24.21.0).
-+let electronNodeVersion = '24.21.0'
++let electronNodeVersion = '24.18.1'
 +if (process.platform === 'darwin') {
 +  try {
 +    const electronApp = join(ELECTRON_DIR, 'Electron.app', 'Contents', 'MacOS', 'Electron')

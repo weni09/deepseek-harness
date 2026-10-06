@@ -253,7 +253,7 @@ new file mode 100644
 index 0000000000..447e74e45e
 --- /dev/null
 +++ b/scripts/package-linux-desktop.ts
-@@ -0,0 +1,421 @@
+@@ -0,0 +1,409 @@
 +/**
 + * Standalone Linux Desktop packager for DeepSeek Harness (deb and AppImage).
 + */
@@ -350,22 +350,10 @@ index 0000000000..447e74e45e
 +
 +console.log('==> 3. Preparing Electron and runtime...')
 +const require = createRequire(import.meta.url)
-+// Pin the Electron build this packager downloads instead of following the upstream `electron`
-+// dependency, whose lockfile entry (44.0.0) ships a Linux tray regression: status icons register
-+// with the StatusNotifierWatcher under a combined "<bus-name>/<object-path>" string. Watchers
-+// such as ayatana-indicator-application read any argument not starting with "/" as a bus name,
-+// so that string fails g_dbus_is_name() and the icon is dropped with no error the application
-+// can observe. Electron 44.1.0 restores the bare service name (Chromium 152.0.7977.x,
-+// crrev.com/c/8272040); 44.5.1 also carries the dbusmenu object-path fix.
-+// Override DSH_ELECTRON_VERSION to move to a newer build without editing this patch.
-+const electronVersion = process.env.DSH_ELECTRON_VERSION ?? '44.5.1'
++const { version: electronVersion } = require('electron/package.json') as { version: string }
 +
-+// Re-download unless the cached tree is exactly this Electron version, so a build directory
-+// left behind by an older pin cannot silently ship the previous binary.
-+const cachedElectronVersion = existsSync(join(ELECTRON_DIR, 'version'))
-+  ? readFileSync(join(ELECTRON_DIR, 'version'), 'utf8').trim()
-+  : undefined
-+if (cachedElectronVersion !== electronVersion) {
++// Download electron for linux-x64 if not already present
++if (!existsSync(join(ELECTRON_DIR, 'electron'))) {
 +  console.log(`Downloading electron v${electronVersion} for linux-x64...`)
 +  const electronArchive = await downloadArtifact({
 +    version: electronVersion,
