@@ -181,6 +181,12 @@ jobs:
             git apply --verbose "$patch"
           done
 
+      - name: Rebuild desktop shell with patches
+        working-directory: ${{ env.SOURCE_DIR }}
+        run: |
+          set -euo pipefail
+          pnpm --dir apps/desktop run build
+
       - name: Pack the release tarballs the desktop runtime installs
         working-directory: ${{ env.SOURCE_DIR }}
         run: |
@@ -288,6 +294,12 @@ jobs:
             echo "Applying $(basename "$patch")"
             git apply --verbose "$patch"
           done
+
+      - name: Rebuild desktop shell with patches
+        working-directory: ${{ env.SOURCE_DIR }}
+        run: |
+          set -euo pipefail
+          pnpm --dir apps/desktop run build
 
       - name: Pack the release tarballs the desktop runtime installs
         working-directory: ${{ env.SOURCE_DIR }}
